@@ -60,12 +60,6 @@ VERSION_LEVEL = {
     '11.0': '30'
 }
 
-SUBTEST_TEMPLATE = {
-    "subtests": [
-    ],
-    "testType": ""
-}
-
 
 # 解析cve补丁页面以获取被修改的函数名
 def process_cve(cveid):
@@ -106,6 +100,15 @@ def process_cve(cveid):
         html_text2 = etree.HTML(html_r2.text)
         tbs = html_text2.xpath('//table')
 
+        tags = re.findall(r'([a-zA-Z \n\-\.\(\)]{0,})</p>\n{0,3}\<table\>(.*?)\</table\>', html_r2.text, re.S)
+        summary: str = None
+        for t in tags:
+            if cveid in t[1]:
+                summary = t[0].replace('\n', ' ')
+                break
+        if summary and '<p>' in summary:
+            summary = summary.split('<p>')[-1]
+        cvefeature['title'] = summary
         # 解析公告页面，提出diff链接
         hasuri = False
         for tb in tbs:
@@ -129,9 +132,9 @@ def process_cve(cveid):
                     for link in diffuris:
                         if 'android.googlesource.com' not in link: continue
                         isgoogleuri = True
-                        link = str(link)
+                        link = str(bulletin_url)
                         patch_date = link[(link.rindex('/') + 1):]
-                        cvefeature['category'] = patch_date[0:6]
+                        cvefeature['category'] = patch_date[0:7]
                     if not isgoogleuri: continue
                     hasuri = True
                     levels = tds[serveid].text
@@ -326,6 +329,7 @@ if __name__ == '__main__':
             addr = hex(addr)
             length = hex(int(symbol['st_size']))
             mask = make_mask(file, addr, length)
+            if mask in masks: continue
             masks.append({
                 'signature': mask,
                 'symbol': symbol.name
@@ -351,7 +355,8 @@ if __name__ == '__main__':
         base.update({file_exists_digest: file_exists})
         for mask_feature in mask_features:
             d = gen_digest(mask_feature)
-            mask_digests.append(d)
+            if d not in mask_digests:
+                mask_digests.append(d)
             base.update({d: mask_feature})
 
         if len(mask_features) == 1:
@@ -363,7 +368,7 @@ if __name__ == '__main__':
             }
             for d in mask_digests:
                 mask_list['subtests'].append(d)
-            cvefeature['testVulnerable']['subtests'].append(file_exists)
+            cvefeature['testVulnerable']['subtests'].append(file_exists_digest)
             cvefeature['testVulnerable']['subtests'].append(mask_list)
         basic_file = '{}-BASIC.json'.format(cve)
         feature_file = '{}.json'.format(cve)

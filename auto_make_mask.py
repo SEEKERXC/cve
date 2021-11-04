@@ -27,7 +27,7 @@ MASK_TEMPLATE = {
 }
 
 CVE_TEMPLATE = {
-    "category": "2018-08",
+    "category": "",
     "cve": "",
     "minApiLevel": 0,
     "maxApiLevel": 0,
@@ -62,19 +62,20 @@ VERSION_LEVEL = {
 
 
 # 解析cve补丁页面以获取被修改的函数名
+# returns: 受补丁影响的函数名、代码文件名、cve特征、修改后的代码的所有函数名
 def process_cve(cveid):
     cvefeature = CVE_TEMPLATE.copy()
     cvefeature['cve'] = cveid
 
     proxies = {
-        'http': 'socks5://127.0.0.1:10808',
-        'https': 'socks5://127.0.0.1:10808'
+        'http': 'socks5://127.0.0.1:10010',
+        'https': 'socks5://127.0.0.1:10010'
     }
     uri = '{}{}'.format(sSecurityBulletinUri, cveid)
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
                  'Chrome/51.0.2704.103 Safari/537.36 '
     headers = {"User-Agent": user_agent}
-    html_r = requests.get(uri, timeout=10, headers=headers, proxies=proxies)
+    html_r = requests.get(uri, timeout=60, headers=headers, proxies=proxies)
     html_text = etree.HTML(html_r.text)
     wpsc = str(etree.tostring(html_text, pretty_print=True))
     diffuris = []
@@ -88,15 +89,16 @@ def process_cve(cveid):
     if gp == [] and diffuris == []:
         print('[*][func=searchCVEInfo]Error: Can\'t found {} Diff web page address in {}.'.format(cveid, uri))
         return
-    func_names = []
-    filenames = []
+    func_names = []  # 被修改的函数名
+    func_list = []  # 所有函数名
+    filenames = []  # 代码文件名
     updated_versions = []
     serveid = None
     upverid = None
     levels = None
     if gp:
         bulletin_url = gp[0]
-        html_r2 = requests.get(bulletin_url, timeout=10, headers=headers, proxies=proxies)
+        html_r2 = requests.get(bulletin_url, timeout=60, headers=headers, proxies=proxies)
         html_text2 = etree.HTML(html_r2.text)
         tbs = html_text2.xpath('//table')
 
@@ -149,7 +151,7 @@ def process_cve(cveid):
 
         # diff页面
         for uri in diffuris:
-            html_r3 = requests.get(uri, timeout=10, headers=headers, proxies=proxies)
+            html_r3 = requests.get(uri, timeout=60, headers=headers, proxies=proxies)
             html_text3 = etree.HTML(html_r3.text)
             aa = html_text3.xpath('//a')
             diff_detail = ''
@@ -161,7 +163,7 @@ def process_cve(cveid):
             print(diff_detail)
 
             # 找到代码链接以及对应的行数
-            html_r4 = requests.get(diff_detail, timeout=10, headers=headers, proxies=proxies)
+            html_r4 = requests.get(diff_detail, timeout=60, headers=headers, proxies=proxies)
             html_text4 = etree.HTML(html_r4.text)
             aa = html_text4.xpath('//a')
             aa_texts = []
@@ -202,8 +204,8 @@ def process_cve(cveid):
                 patched_link = patched_code_links[i]
                 name = filenames[i]
 
-                html_r_pre = requests.get(original_link, timeout=10, headers=headers, proxies=proxies)
-                html_r_post = requests.get(patched_link, timeout=10, headers=headers, proxies=proxies)
+                html_r_pre = requests.get(original_link, timeout=60, headers=headers, proxies=proxies)
+                html_r_post = requests.get(patched_link, timeout=60, headers=headers, proxies=proxies)
                 html_text_pre = etree.HTML(html_r_pre.text)
                 html_text_post = etree.HTML(html_r_post.text)
 
@@ -233,31 +235,29 @@ def process_cve(cveid):
 
                 # 从代码文件找到修改行对应的函数
                 for lineno in linenos:
-                    func_name = find_func_name_by_lineno('post_' + name, lineno)
+                    func_name, func_list = find_func_name_by_lineno('post_' + name, lineno)
                     if func_name and func_name not in func_names:
                         func_names.append(func_name)
-    return func_names, filenames, cvefeature
+
+    return func_names, filenames, cvefeature, func_list
 
 
-# 获取elf文件中函数偏移地址和函数长度，以及对应的代码文件名
-def get_func_offset_length(cveid, filename):
-    func_names, code_file_names, cvefeature = process_cve(cveid)
-    print('Affected function names: ', func_names)
+# 获取elf文件中函数符号信息
+def get_symbol_of_target(target_file, affected_functions):
     symbols_res = []
-    with open(filename, 'rb') as f:
+    with open(target_file, 'rb') as f:
         elffile = ELFFile(f)
         for section in elffile.iter_sections():
             if isinstance(section, SymbolTableSection):
                 for s in section.iter_symbols():
-                    for func_name in func_names:
+                    for func_name in affected_functions:
                         if func_name in str(s.name) or func_name == str(s.name):
                             symbols_res.append(s)
-    return symbols_res, code_file_names, cvefeature
+    return symbols_res
 
 
 # 获取elf文件的基地址偏移量
 def get_offset(filename):
-    print('Processing file:', filename)
     with open(filename, 'rb') as f:
         elffile = ELFFile(f)
         segment = elffile.get_segment(0)
@@ -279,9 +279,11 @@ def make_mask(elffile, func_offset, func_len):
 # 遍历抽象语法树（Abstract Syntax Tree），找到距离指定行号最近的函数
 class AST(object):
     candidate = None
+    func_list = []
 
     def traverse(self, node, lineno):
         if node.kind == clang.cindex.CursorKind.FUNCTION_DECL:
+            self.func_list.append(node.spelling)
             if node.location.line <= lineno:
                 if self.candidate is None:
                     self.candidate = node
@@ -293,6 +295,7 @@ class AST(object):
 
 
 # 根据文件名和行号找到函数，如果没找到，则返回None
+# 顺便返回所有函数的名称
 def find_func_name_by_lineno(filename, lineno):
     index = clang.cindex.Index.create()
     parser = index.parse(filename)
@@ -300,11 +303,72 @@ def find_func_name_by_lineno(filename, lineno):
     a = AST()
     a.traverse(cursor, lineno)
     if a.candidate:
-        return a.candidate.spelling
+        return a.candidate.spelling, a.func_list
     else:
-        return None
+        return None, a.func_list
 
 
+# grep所有函数名，找到目标文件
+# grep_location: grep.exe文件绝对路径
+# all_function: 所有函数列表
+# base_location: 要搜索的基础目录
+def grep_for_target(grep_location, all_functions, patch_affected_functions, base_location):
+    print('==================正在查找目标文件==================')
+    # 将补丁影响函数放到前面，如果补丁影响函数很多，则复杂度O(N^2)，否则复杂度O(N)
+    index = 0
+    for i in range(len(all_functions)):
+        if all_functions[i] in patch_affected_functions:
+            temp = all_functions[i]
+            all_functions[i] = all_functions[index]
+            all_functions[index] = temp
+            index += 1
+
+    candidates = []
+    for func in all_functions:
+        print("搜索函数：{}".format(func))
+        process = subprocess.Popen(
+            "{} -r {} {}".format(grep_location, func, base_location),
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = process.communicate()
+        results = str(out, 'utf-8').split("\n")
+        results.remove('')
+        if results and len(results) > 0:
+            lindex = 12
+            to_remove = []
+            for i in range(len(results)):
+                if 'matches' not in results[i]:
+                    to_remove.append(results[i])
+                    continue
+                rindex = results[i].index(' matches')
+                results[i] = results[i][lindex:rindex]
+            for t in to_remove:
+                results.remove(t)
+            if len(candidates) == 0:
+                candidates = results
+            for binary in candidates:
+                if binary not in results:
+                    candidates.remove(binary)
+            print('候选文件：{}'.format(candidates))
+        if len(candidates) == 1: break
+
+        if len(candidates) > 0:
+            # 如果候选文件名都一样，那么都作为返回结果
+            file_list = []
+            for candidate in candidates:
+                index = candidate.rindex('/')
+                file_list.append(candidate[index:])
+            all_the_same = True
+            if len(file_list) > 0:
+                file0 = file_list[0]
+                for binary in file_list:
+                    if binary != file0:
+                        all_the_same = False
+            if all_the_same: break
+
+    return candidates
+
+
+# 生成摘要
 def gen_digest(feature):
     h = blake2b(digest_size=8)
     h.update(str(feature).encode('utf-8'))
@@ -312,67 +376,110 @@ def gen_digest(feature):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print('Usage: python3 auto_make_mask.py [cveid] [filename]')
+    if len(sys.argv) != 2:
+        print('Usage: python3 auto_make_mask.py [cveid]')
     else:
         cve = sys.argv[1]
-        file = sys.argv[2]
-        offset = get_offset(file)
-        symbols, code_names, cvefeature = get_func_offset_length(cve, file)
-        print('==================生成结果==================')
-        masks = []
-        mask_features = []
+
+        file_exists_digests = []
+        mask_digests_list = []
+        affected_funcs, code_file_names, cvefeature, func_list = process_cve(cve)
+        print('Affected function names: ', affected_funcs)
+        print('Function total: ', len(func_list))
+        base_location = "D:/work_2021/system"
+        target_files = grep_for_target("C:/Program Files (x86)/GnuWin32/bin/grep.exe", func_list, affected_funcs,
+                                       base_location=base_location)
+        print("Target files: ", target_files)
+
+        canGen = False
         base = {}
-        for symbol in symbols:
-            addr = int(symbol['st_value']) - offset
-            if addr % 4 != 0: addr -= 1
-            addr = hex(addr)
-            length = hex(int(symbol['st_size']))
-            mask = make_mask(file, addr, length)
-            if mask in masks: continue
-            masks.append({
-                'signature': mask,
-                'symbol': symbol.name
-            })
-            print('MASK_SIGNATURE_SYMBOL: {}'.format(mask))
-            print('SYMBOL: {}'.format(symbol.name))
-        for name in code_names:
+        for target in target_files:
+            symbols = get_symbol_of_target(target, affected_funcs)  # 受影响的函数符号
+            offset = get_offset(target)  # 基础偏移
+            if symbols and len(symbols) > 0:
+                print('==============正在生成 {} 的特征=============='.format(target))
+                canGen = True
+
+                file_exists = FILE_EXISTS_TEMPLATE.copy()
+                file_exists['filename'] = target[str(target).index('/system'):]
+                file_exists_digest = gen_digest(file_exists)
+                file_exists_digests.append(file_exists_digest)
+                base.update({file_exists_digest: file_exists})
+
+                masks = []
+                mask_digests = []
+                for symbol in symbols:
+                    addr = int(symbol['st_value']) - offset
+                    if addr % 4 != 0: addr -= 1
+                    addr = hex(addr)
+                    length = hex(int(symbol['st_size']))
+                    mask = make_mask(target, addr, length)
+                    mask_feature = {
+                        'filename': target[str(target).index('/system'):],
+                        'signature': mask,
+                        'symbol': symbol.name,
+                        'testType': "MASK_SIGNATURE_SYMBOL"
+                    }
+                    if mask_feature in masks: continue
+                    masks.append(mask_feature)
+                    print('MASK_SIGNATURE_SYMBOL: {}'.format(mask))
+                    print('SYMBOL: {}'.format(symbol.name))
+
+                    for mask_feature in masks:
+                        d = gen_digest(mask_feature)
+                        if d not in mask_digests:
+                            mask_digests.append(d)
+                        base.update({d: mask_feature})
+                mask_digests_list.append(mask_digests)
+
+        basic_file = '{}-BASIC.json'.format(cve)
+
+        if canGen:
+            with open(basic_file, 'w') as f:
+                f.write(json.dumps(base, indent=4))
+
+        if len(file_exists_digests) == 1:
+            if len(mask_digests_list) == 1:
+                cvefeature['testVulnerable']['subtests'] = [file_exists_digests[0], mask_digests_list[0][0]]
+            else:
+                mask_list = {
+                    'subtests': [],
+                    'testType': 'OR'
+                }
+                for d in mask_digests_list[0]:
+                    mask_list['subtests'].append(d)
+                cvefeature['testVulnerable']['subtests'].append(file_exists_digests[0])
+                cvefeature['testVulnerable']['subtests'].append(mask_list)
+        else:
+            cvefeature['testVulnerable']['testType'] = 'OR'
+            for i in range(len(file_exists_digests)):
+                file_exists_digest = file_exists_digests[i]
+                masks = mask_digests_list[i]
+                feature_of_one_file = {
+                    'subtests': [],
+                    'testType': 'AND'
+                }
+                feature_of_one_file['subtests'].append(file_exists_digest)
+                if len(masks) == 1:
+                    feature_of_one_file['subtests'].append(masks[0])
+                else:
+                    mask_list = {
+                        'subtests': masks,
+                        'testType': 'OR'
+                    }
+                    feature_of_one_file['subtests'].append(mask_list)
+
+                cvefeature['testVulnerable']['subtests'].append(feature_of_one_file)
+        feature_file = '{}.json'.format(cve)
+
+        if canGen:
+            base = {}
+            base.update({cve: cvefeature})
+            with open(feature_file, 'w') as f:
+                f.write(json.dumps(cve, indent=4))
+
+        for name in code_file_names:
             os.remove('pre_' + name)
             os.remove('post_' + name)
-
-        for mask in masks:
-            mask_feature = MASK_TEMPLATE.copy()
-            mask_feature['filename'] = file
-            mask_feature['signature'] = mask['signature']
-            mask_feature['symbol'] = mask['symbol']
-            mask_features.append(mask_feature)
-        file_exists = FILE_EXISTS_TEMPLATE.copy()
-        file_exists['filename'] = file
-
-        file_exists_digest = gen_digest(file_exists)
-        mask_digests = []
-
-        base.update({file_exists_digest: file_exists})
-        for mask_feature in mask_features:
-            d = gen_digest(mask_feature)
-            if d not in mask_digests:
-                mask_digests.append(d)
-            base.update({d: mask_feature})
-
-        if len(mask_features) == 1:
-            cvefeature['testVulnerable']['subtests'] = [file_exists_digest, mask_digests[0]]
-        else:
-            mask_list = {
-                'subtests': [],
-                'testType': 'OR'
-            }
-            for d in mask_digests:
-                mask_list['subtests'].append(d)
-            cvefeature['testVulnerable']['subtests'].append(file_exists_digest)
-            cvefeature['testVulnerable']['subtests'].append(mask_list)
-        basic_file = '{}-BASIC.json'.format(cve)
-        feature_file = '{}.json'.format(cve)
-        with open(basic_file, 'w') as f:
-            f.write(json.dumps(base, indent=4))
-        with open(feature_file, 'w') as f:
-            f.write(json.dumps(cvefeature, indent=4))
+        if not canGen:
+            print('==================不能生成MASK_SIGNATURE_SYMBOL==================')

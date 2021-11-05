@@ -151,6 +151,8 @@ def process_cve(cveid):
 
         # diff页面
         for uri in diffuris:
+            if 'https' not in uri or 'http' not in uri:
+                uri = 'https:' + uri
             html_r3 = requests.get(uri, timeout=60, headers=headers, proxies=proxies)
             html_text3 = etree.HTML(html_r3.text)
             aa = html_text3.xpath('//a')
@@ -213,7 +215,7 @@ def process_cve(cveid):
                 trs_pre = html_text_pre.xpath('//tr')
                 trs_post = html_text_post.xpath('//tr')
 
-                f_pre = open('pre_' + name, 'x')
+                f_pre = open('pre_' + name, 'w')
                 for tr in trs_pre:
                     code_spans = tr.xpath('td[2]/span')
                     line = ''
@@ -223,7 +225,7 @@ def process_cve(cveid):
                 f_pre.flush()
                 f_pre.close()
 
-                f_post = open('post_' + name, 'x')
+                f_post = open('post_' + name, 'w')
                 for tr in trs_post:
                     code_spans = tr.xpath('td[2]/span')
                     line = ''
@@ -314,17 +316,13 @@ def find_func_name_by_lineno(filename, lineno):
 # base_location: 要搜索的基础目录
 def grep_for_target(grep_location, all_functions, patch_affected_functions, base_location):
     print('==================正在查找目标文件==================')
-    # 将补丁影响函数放到前面，如果补丁影响函数很多，则复杂度O(N^2)，否则复杂度O(N)
-    index = 0
-    for i in range(len(all_functions)):
-        if all_functions[i] in patch_affected_functions:
-            temp = all_functions[i]
-            all_functions[i] = all_functions[index]
-            all_functions[index] = temp
-            index += 1
+    # 将补丁影响函数放到前面，复杂度O(N)
+    for func in all_functions:
+        if func not in patch_affected_functions:
+            patch_affected_functions.append(func)
 
     candidates = []
-    for func in all_functions:
+    for func in patch_affected_functions:
         print("搜索函数：{}".format(func))
         process = subprocess.Popen(
             "{} -r {} {}".format(grep_location, func, base_location),
@@ -476,10 +474,11 @@ if __name__ == '__main__':
             base = {}
             base.update({cve: cvefeature})
             with open(feature_file, 'w') as f:
-                f.write(json.dumps(cve, indent=4))
+                f.write(json.dumps(base, indent=4))
 
         for name in code_file_names:
-            os.remove('pre_' + name)
-            os.remove('post_' + name)
+            if os.path.exists('pre_' + name) and os.path.exists('post_' + name):
+                os.remove('pre_' + name)
+                os.remove('post_' + name)
         if not canGen:
             print('==================不能生成MASK_SIGNATURE_SYMBOL==================')

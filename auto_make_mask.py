@@ -88,7 +88,26 @@ def process_cve(cveid):
         diffuris = re.findall(r'(http://android.googlesource.com/platform/.*?)\"', wpsc)
     if gp == [] and diffuris == []:
         print('[*][func=searchCVEInfo]Error: Can\'t found {} Diff web page address in {}.'.format(cveid, uri))
-        return
+        search_url = 'https://cse.google.com/cse/element/v1'
+        params = {
+            'rsz': 'filtered_cse',
+            'num': 10,
+            'hl': 'en',
+            'source': 'gcsc',
+            'gss': '.com',
+            'cselibv': 'cc267ab8871224bd',
+            'cx': '016258643462168859875:qqpm8fiwgc0',
+            'q': cveid,
+            'safe': 'off',
+            'cse_tok': 'AJvRUv0cZaTCYrG86F2lGagUcZLg:1636093256173',
+            'exp': 'csqr,cc,4618907',
+            'callback': 'google.search.cse.api19986'
+        }
+        search_request = requests.get(search_url, params=params,
+                                      timeout=60, headers=headers, proxies=proxies)
+        json_search = search_request.text
+        index_p = json_search.index('(')
+        gp.append(json.loads(json_search[(index_p + 1):-2])['results'][0]['url'])
     func_names = []  # 被修改的函数名
     func_list = []  # 所有函数名
     filenames = []  # 代码文件名
@@ -98,6 +117,7 @@ def process_cve(cveid):
     levels = None
     if gp:
         bulletin_url = gp[0]
+        if str(bulletin_url).endswith(','): bulletin_url = bulletin_url[:-1]
         html_r2 = requests.get(bulletin_url, timeout=60, headers=headers, proxies=proxies)
         html_text2 = etree.HTML(html_r2.text)
         tbs = html_text2.xpath('//table')
@@ -346,7 +366,6 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
             for binary in candidates:
                 if binary not in results:
                     candidates.remove(binary)
-            print('候选文件：{}'.format(candidates))
         if len(candidates) == 1: break
 
         if len(candidates) > 0:
@@ -362,7 +381,14 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
                     if binary != file0:
                         all_the_same = False
             if all_the_same: break
-
+        to_remove = []
+        for i in range(len(candidates)):
+            if candidates[i].endswith('.odex') or candidates[i].endswith('.apk') or candidates[i].endswith('.oat') or \
+                    candidates[i].endswith('.dex'):
+                to_remove.append(candidates[i])
+        for s in to_remove:
+            candidates.remove(s)
+        print('候选文件：{}'.format(candidates))
     return candidates
 
 
@@ -437,7 +463,7 @@ if __name__ == '__main__':
                 f.write(json.dumps(base, indent=4))
 
         if len(file_exists_digests) == 1:
-            if len(mask_digests_list) == 1:
+            if len(mask_digests_list[0]) == 1:
                 cvefeature['testVulnerable']['subtests'] = [file_exists_digests[0], mask_digests_list[0][0]]
             else:
                 mask_list = {

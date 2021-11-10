@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import json
+import warnings
 import clang.cindex
 from lxml import etree
 from hashlib import blake2b
@@ -62,7 +63,7 @@ VERSION_LEVEL = {
 
 
 # 解析cve补丁页面以获取被修改的函数名
-# returns: 受补丁影响的函数名、代码文件名、cve特征、修改后的代码的所有函数名
+# returns: 受补丁影响的函数名、代码文件名、代码完整路径、cve特征、修改后的代码的所有函数名
 def process_cve(cveid):
     cvefeature = CVE_TEMPLATE.copy()
     cvefeature['cve'] = cveid
@@ -111,7 +112,9 @@ def process_cve(cveid):
     func_names = []  # 被修改的函数名
     func_list = []  # 所有函数名
     filenames = []  # 代码文件名
-    updated_versions = []
+    original_code_links = []  # 修改前代码路径
+    patched_code_links = []  # 修改后代码路径
+    updated_versions = []  # 影响版本
     serveid = None
     upverid = None
     levels = None
@@ -191,8 +194,6 @@ def process_cve(cveid):
             aa_texts = []
             for a in aa:
                 aa_texts.append(a.text)
-            original_code_links = []
-            patched_code_links = []
 
             print('==================代码文件名与链接==================')
             for a in aa:
@@ -261,7 +262,7 @@ def process_cve(cveid):
                     if func_name and func_name not in func_names:
                         func_names.append(func_name)
 
-    return func_names, filenames, cvefeature, func_list
+    return func_names, filenames, patched_code_links, cvefeature, func_list
 
 
 # 获取elf文件中函数符号信息
@@ -335,6 +336,7 @@ def find_func_name_by_lineno(filename, lineno):
 # all_function: 所有函数列表
 # base_location: 要搜索的基础目录
 def grep_for_target(grep_location, all_functions, patch_affected_functions, base_location):
+    warnings.warn("This function performs badly. Using get_target_file() instead.", DeprecationWarning)
     print('==================正在查找目标文件==================')
     # 将补丁影响函数放到前面，复杂度O(N)
     for func in all_functions:
@@ -392,6 +394,18 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
     return candidates
 
 
+# 通过代码路径获取对应目标文件列表
+# code_path: 完整代码路径列表
+def get_target_file(code_links):
+    with open('targetfile.json', 'rb') as f:
+        tt = json.loads(f.read())
+        for i, item in tt.items():
+            for link in code_links:
+                if item['codepath'] in link:
+                    return item['target']
+    return None
+
+
 # 生成摘要
 def gen_digest(feature):
     h = blake2b(digest_size=8)
@@ -407,13 +421,14 @@ if __name__ == '__main__':
 
         file_exists_digests = []
         mask_digests_list = []
-        affected_funcs, code_file_names, cvefeature, func_list = process_cve(cve)
+        affected_funcs, code_file_names, code_links, cvefeature, func_list, = process_cve(cve)
         print('Affected function names: ', affected_funcs)
         print('Function total: ', len(func_list))
         base_location = "D:/work_2021/system"
-        target_files = grep_for_target("C:/Program Files (x86)/GnuWin32/bin/grep.exe", func_list, affected_funcs,
-                                       base_location=base_location)
+        target_files = get_target_file(code_links)
         print("Target files: ", target_files)
+        if not target_files or len(target_files) == 0:
+            print('=============={}：没找到目标文件=============='.format(cve))
 
         canGen = False
         base = {}
@@ -456,7 +471,7 @@ if __name__ == '__main__':
                         base.update({d: mask_feature})
                 mask_digests_list.append(mask_digests)
 
-        basic_file = '{}-BASIC.json'.format(cve)
+        basic_file = '{}/{}-BASIC.json'.format(cve, cve)
 
         if canGen:
             with open(basic_file, 'w') as f:
@@ -494,7 +509,7 @@ if __name__ == '__main__':
                     feature_of_one_file['subtests'].append(mask_list)
 
                 cvefeature['testVulnerable']['subtests'].append(feature_of_one_file)
-        feature_file = '{}.json'.format(cve)
+        feature_file = '{}/{}.json'.format(cve, cve)
 
         if canGen:
             base = {}

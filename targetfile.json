@@ -1,0 +1,842 @@
+{
+  "1": {
+    "target": [
+      "/system/lib/hw/bluetooth.default.so",
+      "/system/vendor/lib/hw/bluetooth.default.so",
+      "/system/vendor/lib64/hw/bluetooth.default.so",
+      "/system/lib/libbluetooth_stack_mtk.so",
+      "/system/lib64/hw/bplus.default.so",
+      "/system/lib64/hw/bluetooth.default.so",
+      "/system/lib/hw/bplus.default.so",
+      "/system/lib/libbluetooth.so",
+      "/system/lib64/libbluetooth.so",
+      "/system/lib/libbluetooth_qti.so",
+      "/system/lib64/libluetooth_qti.so"
+    ],
+    "codepath": [
+      "/platform/system/bt/"
+    ],
+    "commonstring": "bta_av_role_res"
+  },
+  "2": {
+    "target": [
+      "/system/lib/libstagefright_omx.so",
+      "/system/lib64/libstagefright_omx.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/omx/"
+    ],
+    "commonfunc": "_ZN7android22SimpleSoftOMXComponent12onPortEnableEjb"
+  },
+  "3": {
+    "target": [
+      "/system/lib/libstagefright.so",
+      "/system/lib64/libstagefright.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/id3/",
+      "/media/libstagefright/ACodec.cpp",
+      "/media/libstagefright/ACodecBufferChannel.cpp",
+      "/media/libstagefright/AACExtractor.cpp",
+      "/media/libstagefright/AACWriter.cpp",
+      "/media/libstagefright/AMRExtractor.cpp",
+      "/media/libstagefright/AMRWriter.cpp",
+      "/media/libstagefright/AudioPlayer.cpp",
+      "/media/libstagefright/AudioSource.cpp",
+      "/media/libstagefright/BufferImpl.cpp",
+      "/media/libstagefright/CodecBase.cpp",
+      "/media/libstagefright/CallbackDataSource.cpp",
+      "/media/libstagefright/CameraSource.cpp",
+      "/media/libstagefright/CameraSourceTimeLapse.cpp",
+      "/media/libstagefright/DataConverter.cpp",
+      "/media/libstagefright/DataSource.cpp",
+      "/media/libstagefright/DataURISource.cpp",
+      "/media/libstagefright/ESDS.cpp",
+      "/media/libstagefright/MetaData.cpp",
+      "/media/libstagefright/FileSource.cpp",
+      "/media/libstagefright/FLACExtractor.cpp",
+      "/media/libstagefright/FrameRenderTracker.cpp",
+      "/media/libstagefright/HTTPBase.cpp",
+      "/media/libstagefright/HevcUtils.cpp",
+      "/media/libstagefright/ItemTable.cpp",
+      "/media/libstagefright/JPEGSource.cpp",
+      "/media/libstagefright/MP3Extractor.cpp",
+      "/media/libstagefright/MPEG2TSWriter.cpp",
+      "/media/libstagefright/MPEG4Extractor.cpp",
+      "/media/libstagefright/MPEG4Writer.cpp",
+      "/media/libstagefright/MediaAdapter.cpp",
+      "/media/libstagefright/MediaClock.cpp",
+      "/media/libstagefright/MediaCodec.cpp",
+      "/media/libstagefright/MediaCodecList.cpp",
+      "/media/libstagefright/MediaCodecListOverrides.cpp",
+      "/media/libstagefright/MediaCodecSource.cpp",
+      "/media/libstagefright/MediaExtractor.cpp",
+      "/media/libstagefright/MediaSync.cpp",
+      "/media/libstagefright/MidiExtractor.cpp",
+      "/media/libstagefright/http/MediaHTTP.cpp",
+      "/media/libstagefright/MediaMuxer.cpp",
+      "/media/libstagefright/MediaSource.cpp",
+      "/media/libstagefright/NuCachedSource2.cpp",
+      "/media/libstagefright/NuMediaExtractor.cpp",
+      "/media/libstagefright/OMXClient.cpp",
+      "/media/libstagefright/OmxInfoBuilder.cpp",
+      "/media/libstagefright/OggExtractor.cpp",
+      "/media/libstagefright/SampleIterator.cpp",
+      "/media/libstagefright/SampleTable.cpp",
+      "/media/libstagefright/SimpleDecodingSource.cpp",
+      "/media/libstagefright/SkipCutBuffer.cpp",
+      "/media/libstagefright/StagefrightMediaScanner.cpp",
+      "/media/libstagefright/StagefrightMetadataRetriever.cpp",
+      "/media/libstagefright/SurfaceMediaSource.cpp",
+      "/media/libstagefright/SurfaceUtils.cpp",
+      "/media/libstagefright/ThrottledSource.cpp",
+      "/media/libstagefright/Utils.cpp",
+      "/media/libstagefright/VBRISeeker.cpp",
+      "/media/libstagefright/VideoFrameScheduler.cpp",
+      "/media/libstagefright/WAVExtractor.cpp",
+      "/media/libstagefright/XINGSeeker.cpp",
+      "/media/libstagefright/avc_utils.cpp",
+      "/media/libstagefright/mpeg2ts/"
+    ],
+    "commonfunc": "_ZN9mkvparser10GetVersionERiS0_S0_S0_"
+  },
+  "4": {
+    "target": [
+      "/system/framework/oat/arm64/services.odex",
+      "/system/framework/arm/services.odex",
+      "/system/framework/oat/arm/services.odex",
+      "/system/framework/oat/arm64/services.vdex",
+      "/system/framework/arm64/services.odex",
+      "/system/framework/arm/services.dex"
+    ],
+    "codepath": [
+      "services/core/java"
+    ],
+    "commonstring": "error parsing the id of the authority"
+  },
+  "5": {
+    "target": [
+      "/system/priv-app/SystemUI/SystemUI.apk"
+    ],
+    "codepath": [
+      "packages/SystemUI/src"
+    ],
+    "zipitem": "classes.dex",
+    "commonstring": "canCameraGestureBeLaunched"
+  },
+  "6": {
+    "target": [
+      "/system/lib/soundfx/libreverbwrapper.so",
+      "/system/lib64/soundfx/libreverbwrapper.so",
+      "/system/vendor/lib/soundfx/libreverbwrapper.so",
+      "/system/vendor/lib64/soundfx/libreverbwrapper.so"
+    ],
+    "codepath": [
+      "media/libeffects/lvm/wrapper/Reverb/"
+    ],
+    "commonstring": "libreverbwrapper.so"
+  },
+  "7": {
+    "target": [
+      "/system/lib/libmedia.so",
+      "/system/lib64/libmedia.so"
+    ],
+    "codepath": [
+      "/media/libmedia/"
+    ],
+    "commonfunc": "_ZN7android6BnHDCP10onTransactEjRKNS_6ParcelEPS1_j"
+  },
+  "8": {
+    "target": [
+      "/system/lib/libmediadrm.so",
+      "/system/lib64/libmediadrm.so",
+      "/system/lib/arm/libmediadrm.so"
+    ],
+    "codepath": [
+      "/drm/libmediadrm/"
+    ],
+    "commonfunc": "_ZN7android8BnCrypto10onTransactEjRKNS_6ParcelEPS1_j"
+  },
+  "9": {
+    "target": [
+      "/system/lib/libnetutils.so",
+      "/system/lib64/libnetutils.so"
+    ],
+    "codepath": [
+      "/libnetutils/"
+    ],
+    "commonfunc": "receive_packet"
+  },
+  "10": {
+    "target": [
+      "/system/lib/soundfx/libbundlewrapper.so",
+      "/system/lib64/soundfx/libbundlewrapper.so"
+    ],
+    "codepath": [
+      "media/libeffects/lvm/wrapper"
+    ],
+    "commonstring": "libbundlewrapper.so"
+  },
+  "11": {
+    "target": [
+      "/system/app/Email/Email.apk"
+    ],
+    "codepath": [
+      "/platform/packages/apps/Email"
+    ],
+    "zipitem": "AndroidManifest.xml",
+    "commonstring": "com.android.email"
+  },
+  "12": {
+    "target": [
+      "/system/priv-app/Contacts/oat/arm64/Contacts.odex"
+    ],
+    "codepath": [
+      "/platform/packages/apps/ContactsCommon",
+      "platform/packages/apps/Contacts/"
+    ],
+    "commonstring": "savePhotoFromUriToUri"
+  },
+  "13": {
+    "target": [
+      "/system/lib/libaudioflinger.so",
+      "/system/lib64/libaudioflinger.so"
+    ],
+    "codepath": [
+      "/services/audioflinger/"
+    ],
+    "commonstring": "libaudioflinger.so"
+  },
+  "14": {
+    "target": [
+      "/system/lib/libsonivox.so",
+      "/system/lib64/libsonivox.so"
+    ],
+    "codepath": [
+      "/external/sonivox/"
+    ],
+    "commonfunc": "SMF_CheckFileType"
+  },
+  "15": {
+    "target": [
+      "/system/lib/libframesequence.so",
+      "/system/lib64/libframesequence.so",
+      "/system/app/PrebuiltBugle/lib/arm/libframesequence.so",
+      "/system/priv-app/PlusOne/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/Photos/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/Velvet/lib/arm/libframesequence.so",
+      "/system/app/Youtube/lib/armeabi-v7a/libframesequence.so",
+      "/system/priv-app/Velvet/lib/arm/libframesequence.so",
+      "/system/priv-app/PlusOne/lib/arm/libframesequence.so",
+      "/system/app/Hangouts/lib/arm/libframesequence.so",
+      "/system/app/PrebuiltBugle/lib/arm64-v8a/libframesequence.so",
+      "/system/app/Bugle/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/Velvet/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/PrebuiltBugle/lib/armeabi-v7a/libframesequence.so",
+      "/system/priv-app/Youtube/lib/armeabi-v7a/libframesequence.so",
+      "/system/priv-app/PrebuiltBugle/lib/arm/libframesequence.so",
+      "/system/app/Bugle/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/Hangouts/lib/arm/libframesequence.so",
+      "/system/app/PlusOne/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/Photos/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/Youtube/lib/arm/libframesequence.so",
+      "/system/priv-app/Photos/lib/arm/libframesequence.so",
+      "/system/priv-app/Youtube/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/Photos/lib/arm64-v8a/libframesequence.so",
+      "/system/app/Velvet/lib/arm64-v8a/libframesequence.so",
+      "/system/app/Hangouts/lib/armeabi-v7a/libframesequence.so",
+      "/system/priv-app/Hangouts/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/Photos/lib/arm/libframesequence.so",
+      "/system/app/Hangouts/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/Velvet/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/PrebuiltBugle/lib/armeabi-v7a/libframesequence.so",
+      "/system/app/PlusOne/lib/arm/libframesequence.so",
+      "/system/priv-app/Bugle/lib/arm64-v8a/libframesequence.so",
+      "/system/app/Bugle/lib/arm/libframesequence.so",
+      "/system/app/PlusOne/lib/armeabi-v7a/libframesequence.so",
+      "/system/priv-app/Bugle/lib/armeabi-v7a/libframesequence.so",
+      "/system/priv-app/Youtube/lib/arm/libframesequence.so",
+      "/system/priv-app/Hangouts/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/PrebuiltBugle/lib/arm64-v8a/libframesequence.so",
+      "/system/app/Photos/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/PlusOne/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/Bugle/lib/arm/libframesequence.so",
+      "/system/app/Youtube/lib/arm64-v8a/libframesequence.so",
+      "/system/priv-app/Velvet/lib/armeabi-v7a/libframesequence.so"
+    ],
+    "codepath": [
+      "/framesequence/"
+    ],
+    "commonstring": "libframesequence.so"
+  },
+  "16": {
+    "target": [
+      "/system/lib/libmediaplayerservice.so",
+      "/system/lib64/libmediaplayerservice.so"
+    ],
+    "codepath": [
+      "/media/libmediaplayerservice/"
+    ],
+    "commonfunc": "_ZNK7android19ASessionDescription13getFormatTypeEjPmPNS_7AStringES3_"
+  },
+  "17": {
+    "target": [
+      "/system/framework/arm/boot-telephony-common.oat",
+      "/system/framework/arm64/boot-telephony-common.oat"
+    ],
+    "codepath": [
+      "/frameworks/opt/telephony/"
+    ],
+    "commonstring": "processMessagePart"
+  },
+  "18": {
+    "target": [
+      "/system/framework/arm/boot-framework.oat",
+      "/system/framework/arm64/boot-framework.oat",
+      "/system/framework/x86/boot-framework.oat"
+    ],
+    "codepath": [
+      "/core/java/android/"
+    ],
+    "commonstring": "writeMapInternal"
+  },
+  "19": {
+    "target": [
+      "/system/lib/libvorbisidec.so",
+      "/system/lib64/libvorbisidec.so",
+      "/system/lib/vndk-28/libvorbisidec.so",
+      "/system/lib64/vndk-28/libvorbisidec.so"
+    ],
+    "codepath": [
+      "/external/tremolo/"
+    ],
+    "commonfunc": "floor0_inverse1"
+  },
+  "20": {
+    "target": [
+      "/system/lib/libstagefright_soft_aacdec.so",
+      "/system/lib64/libstagefright_soft_aacdec.so"
+    ],
+    "codepath": [
+      "platform/external/aac/"
+    ],
+    "commonfunc": "_Z13lppTransposerP13SBR_LPP_TRANSP16QMF_SCALE_FACTORPPlS3_S4_iiiiiP9INVF_MODES6_"
+  },
+  "21": {
+    "target": [
+      "/system/lib/libnfc-nxp-nci.so",
+      "/system/lib64/libnfc-nci.so",
+      "/system/lib/libnfc-nci-45-548.so",
+      "/system/lib/libnfc-nci-45-551.so",
+      "/system/lib64/libnfc-nci-45-66t.so",
+      "/system/lib64/libnfc-nci-45-553.so",
+      "/system/lib64/libnfc-nxp-nci.so",
+      "/system/lib/libnfc-nci-45-66t.so",
+      "/system/lib/libnfc-nci-45-553.so",
+      "/system/lib64/libnfc-nci-45-551.so",
+      "/system/lib64/libnfc-nci-45-548.so",
+      "/system/lib/libnfc-nci.so"
+    ],
+    "codepath": [
+      "platform/system/nfc/"
+    ],
+    "commonfunc": "llcp_util_parse_link_params"
+  },
+  "22": {
+    "target": [
+      "/system/priv-app/LGTelephonyProvider/oat/arm/LGTelephonyProvider.odex",
+      "/system/priv-app/TelephonyProvider/arm/TelephonyProvider.odex",
+      "/system/priv-app/TelephonyProvider/oat/arm64/TelephonyProvider.odex",
+      "/system/priv-app/SemcTelephonyProvider/oat/arm64/SemcTelephonyProvider.odex",
+      "/system/priv-app/TelephonyProvider/oat/arm/TelephonyProvider.odex",
+      "/system/priv-app/LGTelephonyProvider/oat/arm64/LGTelephonyProvider.odex",
+      "/system/priv-app/TelephonyProvider/arm64/TelephonyProvider.odex"
+    ],
+    "codepath": [
+      "packages/providers/TelephonyProvider/"
+    ],
+    "commonstring": "deletePreferredApn"
+  },
+  "23": {
+    "target": [
+      "/system/lib/libpac.so",
+      "/system/lib64/libpac.so"
+    ],
+    "codepath": [
+      "/external/chromium-libpac/"
+    ],
+    "commonfunc": "_ZN3net15ProxyResolverV812SetPacScriptERKN7android8String16E"
+  },
+  "24": {
+    "target": [
+      "/system/priv-app/VpnDialogs/VpnDialogs.apk"
+    ],
+    "codepath": [
+      "/packages/VpnDialogs/"
+    ],
+    "zipitem": "AndroidManifest.xml",
+    "commonstring": "com.android.vpndialogs"
+  },
+  "25": {
+    "target": [
+      "/system/app/Bluetooth/Bluetooth.apk"
+    ],
+    "codepath": [
+      "/packages/apps/Bluetooth/"
+    ],
+    "zipitem": "AndroidManifest.xml",
+    "commonstring": "com.android.bluetooth"
+  },
+  "26": {
+    "target": [
+      "/system/lib/libgiftranscode.so",
+      "/system/lib64/libgiftranscode.so",
+      "/system/app/Bugle/lib/arm/libgiftranscode.so"
+    ],
+    "codepath": [
+      "/jni/GifTranscoder"
+    ],
+    "commonfunc": "_ZN13GifTranscoder15resizeBoxFilterEP11GifFileTypeS1_"
+  },
+  "27": {
+    "target": [
+      "/system/app/messaging/oat/arm64/messaging.odex"
+    ],
+    "codepath": [
+      "packages/apps/Messaging/"
+    ],
+    "commonstring": "getCarrierConfigValuesLoader"
+  },
+  "28": {
+    "target": [
+      "/system/lib64/libnfc_nci_jni.so",
+      "/system/lib/libnfc_sec_jni.so",
+      "/system/lib64/libnfc_nci_jni_zte.so",
+      "/system/lib64/libnfc_nci_jni_45_551.so",
+      "/system/lib64/libnqnfc_nci_jni.so",
+      "/system/lib64/libLGnfc_jni.so",
+      "/system/lib/libLGnfc_jni.so",
+      "/system/vendor/lib64/libnfc_nci_jni.so",
+      "/system/lib/libnfc_nci_jni_45_551.so",
+      "/system/lib64/libnfc_sec_jni.so",
+      "/system/lib64/libnfc_nci_jni_45_553.so",
+      "/system/lib/libnfc_nci_jni.so",
+      "/system/lib64/libnxpnfc_nci_jni.so",
+      "/system/lib64/libsn100nfc_nci_jni.so"
+    ],
+    "codepath": [
+      "/nci/jni/"
+    ],
+    "commonfunc": "_ZN6NfcTag24fillNativeNfcTagMembers3EP7_JNIEnvP7_jclassP8_jobjectR14tNFA_ACTIVATED"
+  },
+  "29": {
+    "target": [
+      "/system/lib/libstagefright_soft_mpeg4dec.so",
+      "/system/lib64/libstagefright_soft_mpeg4dec.so"
+    ],
+    "codepath": [
+      "/libstagefright/codecs/m4v_h263/dec/src"
+    ],
+    "commonfunc": "DecodeShortHeader"
+  },
+  "30": {
+    "target": [
+      "/system/lib/libstagefright_httplive.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/httplive/"
+    ],
+    "commonfunc": "_ZN7android9M3UParser5parseEPKvj"
+  },
+  "31": {
+    "target": [
+      "/system/lib/libstagefright_soft_amrwbenc.so",
+      "/system/lib64/libstagefright_soft_amrwbenc.so",
+      "/system/lib/vndk-28/libstagefright_soft_amrwbenc.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/codecs/amrwbenc/"
+    ],
+    "commonfunc": "ACELP_4t64_fx"
+  },
+  "32": {
+    "target": [
+      "/system/lib/libcamera_client.so",
+      "/system/lib64/libcamera_client.so"
+    ],
+    "codepath": [
+      "/camera/Camera.cpp",
+      "/camera/CameraMetadata.cpp",
+      "/camera/CameraParameters.cpp",
+      "/camera/CaptureResult.cpp",
+      "/camera/CameraParameters2.cpp",
+      "/camera/ICamera.cpp",
+      "/camera/ICameraClient.cpp",
+      "/camera/ICameraService.cpp",
+      "/camera/ICameraServiceListener.cpp",
+      "/camera/ICameraServiceProxy.cpp",
+      "/camera/ICameraRecordingProxy.cpp",
+      "/camera/ICameraRecordingProxyListener.cpp",
+      "/camera/camera2/ICameraDeviceUser.cpp",
+      "/camera/camera2/ICameraDeviceCallbacks.cp",
+      "/camera/camera2/CaptureRequest.cpp",
+      "/camera/camera2/OutputConfiguration.cpp",
+      "/camera/CameraBase.cpp",
+      "/camera/CameraUtils.cpp",
+      "/camera/VendorTagDescriptor.cpp"
+    ],
+    "commonfunc": "_ZN7android10CameraBaseINS_6CameraENS_12CameraTraitsIS1_EEE7connectEiRKNS_8String16Eii"
+  },
+  "33": {
+    "target": [
+      "/system/lib/libmediandk.so",
+      "/system/lib64/libmediandk.so"
+    ],
+    "codepath": [
+      "/media/ndk/NdkMediaCodec.cpp",
+      "/media/ndk/NdkMediaCrypto.cpp",
+      "/media/ndk/NdkMediaDataSource.cpp",
+      "/media/ndk/NdkMediaExtractor.cpp",
+      "/media/ndk/NdkMediaFormat.cpp",
+      "/media/ndk/NdkMediaMuxer.cpp",
+      "/media/ndk/NdkMediaDrm.cpp",
+      "/media/ndk/NdkImage.cpp",
+      "/media/ndk/NdkImageReader.cpp"
+    ],
+    "commonfunc": "AMediaCodecCryptoInfo_new"
+  },
+  "34": {
+    "target": [
+      "/system/vendor/bin/wpa_supplicant",
+      "/system/bin/wpa_supplicant",
+      "/system/vendor/bin/hw/wpa_supplicant"
+    ],
+    "codepath": [
+      "/external/wpa_supplicant_8/"
+    ],
+    "commonstring": "WPA: Installing GTK to the driver (keyidx=%d tx=%d len=%d)"
+  },
+  "35": {
+    "target": [
+      "/system/framework/framework-res.apk"
+    ],
+    "codepath": [
+      "/core/res/AndroidManifest.xml"
+    ],
+    "zipitem": "AndroidManifest.xml",
+    "commonstring": "com.android.server.connectivityservice.CONNECTED_TO_PROVISIONING_NETWORK_ACTION"
+  },
+  "36": {
+    "target": [
+      "/system/bin/keystore"
+    ],
+    "codepath": [
+      "/keystore/keystore.cpp"
+    ],
+    "commonstring": "could not find any keystore module"
+  },
+  "37": {
+    "target": [
+      "/system/lib/libstagefright_foundation.so",
+      "/system/lib64/libstagefright_foundation.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/foundation/"
+    ],
+    "commonstring": "This type of object cannot cross process boundaries."
+  },
+  "38": {
+    "target": [
+      "/system/lib/libstagefright_soft_mpeg2dec.so",
+      "/system/lib64/libstagefright_soft_mpeg2dec.so"
+    ],
+    "codepath": [
+      "/decoder/impeg2d_dec_hdr.c"
+    ],
+    "commonfunc": "impeg2d_dec_seq_ext"
+  },
+  "39": {
+    "target": [
+      "/system/lib/libstagefright_soft_avcdec.so",
+      "/system/lib64/libstagefright_soft_avcdec.so"
+    ],
+    "codepath": [
+      "common/ih264_buf_mgr.c",
+      "common/ih264_disp_mgr.c",
+      "common/ih264_inter_pred_filters.c",
+      "common/ih264_luma_intra_pred_filters.c",
+      "common/ih264_chroma_intra_pred_filters.c",
+      "common/ih264_padding.c",
+      "common/ih264_mem_fns.c",
+      "common/ih264_deblk_edge_filters.c",
+      "common/ih264_iquant_itrans_recon.c",
+      "common/ih264_ihadamard_scaling.c",
+      "common/ih264_weighted_pred.c",
+      "common/ithread.c",
+      "decoder/ih264d_cabac.c",
+      "decoder/ih264d_parse_mb_header.c",
+      "decoder/ih264d_parse_cabac.c",
+      "decoder/ih264d_process_intra_mb.c",
+      "decoder/ih264d_inter_pred.c",
+      "decoder/ih264d_parse_bslice.c",
+      "decoder/ih264d_parse_pslice.c",
+      "decoder/ih264d_parse_islice.c",
+      "decoder/ih264d_cabac_init_tables.c",
+      "decoder/ih264d_bitstrm.c",
+      "decoder/ih264d_compute_bs.c",
+      "decoder/ih264d_deblocking.c",
+      "decoder/ih264d_parse_headers.c",
+      "decoder/ih264d_mb_utils.c",
+      "decoder/ih264d_mvpred.c",
+      "decoder/ih264d_utils.c",
+      "decoder/ih264d_process_bslice.c",
+      "decoder/ih264d_process_pslice.c",
+      "decoder/ih264d_parse_slice.c",
+      "decoder/ih264d_quant_scaling.c",
+      "decoder/ih264d_parse_cavlc.c",
+      "decoder/ih264d_dpb_mgr.c",
+      "decoder/ih264d_nal.c",
+      "decoder/ih264d_sei.c",
+      "decoder/ih264d_tables.c",
+      "decoder/ih264d_vui.c",
+      "decoder/ih264d_format_conv.c",
+      "decoder/ih264d_thread_parse_decode.c",
+      "decoder/ih264d_api.c",
+      "decoder/ih264d_thread_compute_bs.c",
+      "decoder/ih264d_function_selector_generic.c",
+      "/media/libstagefright/codecs/"
+    ],
+    "commonfunc": "ih264d_read_mmco_commands"
+  },
+  "40": {
+    "target": [
+      "/system/lib/libbinder.so",
+      "/system/lib64/libbinder.so"
+    ],
+    "codepath": [
+      "/libs/binder/AppOpsManager.cpp",
+      "/libs/binder/Binder.cpp",
+      "/libs/binder/BpBinder.cpp",
+      "/libs/binder/BufferedTextOutput.cpp",
+      "/libs/binder/Debug.cpp",
+      "/libs/binder/IAppOpsCallback.cpp",
+      "/libs/binder/IAppOpsService.cpp",
+      "/libs/binder/IBatteryStats.cpp",
+      "/libs/binder/IInterface.cpp",
+      "/libs/binder/IMemory.cpp",
+      "/libs/binder/IPCThreadState.cpp",
+      "/libs/binder/IPermissionController.cpp",
+      "/libs/binder/IServiceManager.cpp",
+      "/libs/binder/MemoryDealer.cpp",
+      "/libs/binder/MemoryBase.cpp",
+      "/libs/binder/MemoryHeapBase.cpp",
+      "/libs/binder/Parcel.cpp",
+      "/libs/binder/PermissionCache.cpp",
+      "/libs/binder/ProcessState.cpp",
+      "/libs/binder/Static.cpp",
+      "/libs/binder/TextOutput.cpp"
+    ],
+    "commonfunc": "_ZNK7android8BpMemory9getMemoryEPiPj"
+  },
+  "41": {
+    "target": [
+      "/system/priv-app/Telecom/oat/arm64/Telecom.odex"
+    ],
+    "codepath": [
+      "/packages/services/Telecomm/"
+    ],
+    "commonstring": "Silence Ringer requested by %s"
+  },
+  "42": {
+    "target": [
+      "/system/app/Exchange2/oat/arm64/Exchange2.odex"
+    ],
+    "codepath": [
+      "/packages/apps/Exchange/"
+    ],
+    "commonstring": "Bad response code when posting autodiscover: %d"
+  },
+  "43": {
+    "target": [
+      "/system/lib/libgui.so",
+      "/system/lib64/libgui.so"
+    ],
+    "codepath": [
+      "/libs/gui/IGraphicBufferConsumer.cpp",
+      "/libs/gui/IConsumerListener.cpp",
+      "/libs/gui/BitTube.cpp",
+      "/libs/gui/BufferItem.cpp",
+      "/libs/gui/BufferItemConsumer.cpp",
+      "/libs/gui/BufferQueue.cpp",
+      "/libs/gui/BufferQueueConsumer.cpp",
+      "/libs/gui/BufferQueueCore.cpp",
+      "/libs/gui/BufferQueueProducer.cpp",
+      "/libs/gui/BufferSlot.cpp",
+      "/libs/gui/ConsumerBase.cpp",
+      "/libs/gui/CpuConsumer.cpp",
+      "/libs/gui/DisplayEventReceiver.cpp",
+      "/libs/gui/GLConsumer.cpp",
+      "/libs/gui/GraphicBufferAlloc.cpp",
+      "/libs/gui/GuiConfig.cpp",
+      "/libs/gui/IDisplayEventConnection.cpp",
+      "/libs/gui/IGraphicBufferAlloc.cpp",
+      "/libs/gui/IGraphicBufferProducer.cpp",
+      "/libs/gui/IProducerListener.cpp",
+      "/libs/gui/ISensorEventConnection.cpp",
+      "/libs/gui/ISensorServer.cpp",
+      "/libs/gui/ISurfaceComposer.cpp",
+      "/libs/gui/ISurfaceComposerClient.cpp",
+      "/libs/gui/LayerState.cpp",
+      "/libs/gui/Sensor.cpp",
+      "/libs/gui/SensorEventQueue.cpp",
+      "/libs/gui/SensorManager.cpp",
+      "/libs/gui/StreamSplitter.cpp",
+      "/libs/gui/Surface.cpp",
+      "/libs/gui/SurfaceControl.cpp",
+      "/libs/gui/SurfaceComposerClient.cpp",
+      "/libs/gui/SyncFeatures.cpp"
+    ],
+    "commonstring": "setMaxAcquiredBufferCount: producer is already connected"
+  },
+  "44": {
+    "target": [
+      "/system/lib/libstagefright_soft_mpeg4enc.so",
+      "/system/lib64/libstagefright_soft_mpeg4enc.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/codecs/m4v_h263/enc/"
+    ],
+    "commonstring": "Failed to get default encoding parameters"
+  },
+  "45": {
+    "target": [
+      "/system/bin/debuggerd"
+    ],
+    "codepath": [
+      "backtrace.cpp",
+      "debuggerd.cpp",
+      "elf_utils.cpp",
+      "getevent.cpp",
+      "tombstone.cpp",
+      "utility.cpp"
+    ],
+    "commonstring": "Possible corrupted note, name size value is too large: %u"
+  },
+  "46": {
+    "target": [
+      "/system/lib/libcameraservice.so",
+      "/system/lib64/libcameraservice.so"
+    ],
+    "codepath": [
+      "/services/camera/libcameraservice/"
+    ],
+    "commonstring": "CameraService started (pid=%d)"
+  },
+  "47": {
+    "target": [
+      "/system/lib/libstagefright_soft_h264dec.so",
+      "/system/lib64/libstagefright_soft_h264dec.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/codecs/on2/h264dec/"
+    ],
+    "commonstring": "Decoder failed: %d"
+  },
+  "48": {
+    "target": [
+      "/vendor/lib/libOmxVdec.so"
+    ],
+    "codepath": [
+      "/mm-video-v4l2/vidc/"
+    ],
+    "commonfunc": "_ZN8omx_vdec13omx_cmd_queue9pop_entryEPmS1_S1_"
+  },
+  "49": {
+    "target": [
+      "/system/lib/libstagefright_soft_g711dec.so",
+      "/system/lib64/libstagefright_soft_g711dec.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/codecs/g711/dec/"
+    ],
+    "commonfunc": "_ZN7android8SoftG71110DecodeALawEPsPKhj"
+  },
+  "50": {
+    "target": [
+      "/system/lib/libstagefright_soft_mp3dec.so",
+      "/system/lib64/libstagefright_soft_mp3dec.so"
+    ],
+    "codepath": [
+      "/media/libstagefright/codecs/mp3dec/"
+    ],
+    "commonfunc": "_ZN7android7SoftMP313onQueueFilledEj"
+  },
+  "51": {
+    "target": [
+      "/system/lib/libwifi-service.so",
+      "/system/lib64/libwifi-service.so"
+    ],
+    "codepath": [
+      "jni/com_android_server_wifi_WifiNative.cpp",
+      "jni/jni_helper.cpp"
+    ],
+    "commonstring": "invalid character in bssid %c"
+  },
+  "52": {
+    "target": [
+      "/system/lib/libui.so",
+      "/system/lib64/libui.so"
+    ],
+    "codepath": [
+      "/libs/ui/Fence.cpp",
+      "/libs/ui/FrameStats.cpp",
+      "/libs/ui/GraphicBuffer.cpp",
+      "/libs/ui/GraphicBufferAllocator.cpp",
+      "/libs/ui/GraphicBufferMapper.cpp",
+      "/libs/ui/HdrCapabilities.cpp",
+      "/libs/ui/PixelFormat.cpp",
+      "/libs/ui/Rect.cpp",
+      "/libs/ui/Region.cpp",
+      "/libs/ui/UiConfig.cpp"
+    ],
+    "commonstring": "  Region %s (this=%p, count=%"
+  },
+  "53": {
+    "target": [
+      "/system/priv-app/TeleService/TeleService.apk"
+    ],
+    "codepath": [
+      "/packages/services/Telephony/"
+    ],
+    "zipitem": "AndroidManifest.xml",
+    "commonstring": "com.android.services.telephony.activation.SimActivationActivity"
+  },
+  "54": {
+    "target": [
+      "/system/system_ext/priv-app/Settings/Settings.apk"
+    ],
+    "codepath": [
+      "/packages/apps/Settings"
+    ],
+    "zipitem": "classes.dex",
+    "commonstring": "getPreferenceScreenResId"
+  },
+  "55": {
+    "target": [
+      "/system/priv-app/VpnDialogs/VpnDialogs.apk"
+    ],
+    "codepath": [
+      "/packages/VpnDialogs"
+    ],
+    "zipitem": "classes.dex",
+    "commonstring": "fail to call getAlwaysOnVpnPackage"
+  },
+  "56": {
+    "target": [
+      "/system/priv-app/Settings/oat/arm64/Settings.odex",
+      "/system/priv-app/SystemUI/oat/arm64/SystemUI.odex"
+    ],
+    "codepath": "/packages/SettingsLib",
+    "commonstring": "onProfileStateChanged"
+  }
+}

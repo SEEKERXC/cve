@@ -448,6 +448,7 @@ if __name__ == '__main__':
         print("Target files: ", target_files)
         if not target_files or len(target_files) == 0:
             print('=============={}：没找到目标文件=============='.format(cve))
+            exit(0)
 
         canGen = False
         base = {}

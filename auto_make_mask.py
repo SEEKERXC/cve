@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import json
+import time
 import warnings
 import clang.cindex
 from lxml import etree
@@ -63,7 +64,7 @@ VERSION_LEVEL = {
 
 
 # 解析cve补丁页面以获取被修改的函数名
-# returns: 受补丁影响的函数名、代码文件名、代码完整路径、cve特征、修改后的代码的所有函数名
+# returns: 受补丁影响的函数名、代码文件名、代码完整路径、cve特征、修改后的代码的所有函数名、发布日期
 def process_cve(cveid):
     cvefeature = CVE_TEMPLATE.copy()
     cvefeature['cve'] = cveid
@@ -118,6 +119,7 @@ def process_cve(cveid):
     serveid = None
     upverid = None
     levels = None
+    patch_date = None
     if gp:
         bulletin_url = gp[0]
         if str(bulletin_url).endswith(','): bulletin_url = bulletin_url[:-1]
@@ -262,7 +264,7 @@ def process_cve(cveid):
                     if func_name and func_name not in func_names:
                         func_names.append(func_name)
 
-    return func_names, filenames, patched_code_links, cvefeature, func_list
+    return func_names, filenames, patched_code_links, cvefeature, func_list, patch_date
 
 
 # 获取elf文件中函数符号信息
@@ -394,16 +396,33 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
     return candidates
 
 
-# 通过代码路径获取对应目标文件列表
+# 通过代码路径获取对应目标文件列表，再通过补丁日期确定相应的release，从而确定每个release的目标文件列表
+# base_dir: 存放安卓文件夹的根目录
 # code_path: 完整代码路径列表
-def get_target_file(code_links):
+# patch_date: 补丁发布日期，格式YYYY-mm-dd
+def get_target_file(base_dir, code_links, patch_date):
+    file_paths = []
+    targets = []
     with open('targetfile.json', 'rb') as f:
         tt = json.loads(f.read())
         for i, item in tt.items():
             for link in code_links:
                 if item['codepath'] in link:
-                    return item['target']
-    return None
+                    targets = item['target']
+    with open('release_date.json', 'r') as rdfile:
+        release_date = json.loads(rdfile.read())
+    patch_date_formatted = time.strptime(patch_date, "%Y-%m-%d")
+    vulnerable_releases = []  # 存在漏洞的release版本列表
+    for release in release_date:
+        release_date_formatted = time.strptime(release_date[release], "%Y/%m/%d")
+        if patch_date_formatted > release_date_formatted:
+            vulnerable_releases.append(release)
+    for t in targets:
+        for v in vulnerable_releases:
+            file_path = '{}{}/out/target/product/generic_arm64{}'.format(base_dir, v, t)
+            if os.path.exists(file_path):
+                file_paths.append(file_path)
+    return file_paths
 
 
 # 生成摘要
@@ -421,11 +440,11 @@ if __name__ == '__main__':
 
         file_exists_digests = []
         mask_digests_list = []
-        affected_funcs, code_file_names, code_links, cvefeature, func_list, = process_cve(cve)
+        affected_funcs, code_file_names, code_links, cvefeature, func_list, patch_date = process_cve(cve)
         print('Affected function names: ', affected_funcs)
         print('Function total: ', len(func_list))
         base_location = "D:/work_2021/system"
-        target_files = get_target_file(code_links)
+        target_files = get_target_file(base_location, code_links, patch_date)
         print("Target files: ", target_files)
         if not target_files or len(target_files) == 0:
             print('=============={}：没找到目标文件=============='.format(cve))

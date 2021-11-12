@@ -397,10 +397,11 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
 
 
 # 通过代码路径获取对应目标文件列表，再通过补丁日期确定相应的release，从而确定每个release的目标文件列表
+# cve: CVE编号
 # base_dir: 存放安卓文件夹的根目录
 # code_path: 完整代码路径列表
 # patch_date: 补丁发布日期，格式YYYY-mm-dd
-def get_target_file(base_dir, code_links, patch_date):
+def get_target_file(cve, base_dir, code_links, patch_date):
     file_paths = []
     targets = []
     with open('targetfile.json', 'rb') as f:
@@ -411,6 +412,9 @@ def get_target_file(base_dir, code_links, patch_date):
                     targets = item['target']
     with open('release_date.json', 'r') as rdfile:
         release_date = json.loads(rdfile.read())
+    with open('versions.json', 'r') as vf:
+        version_json = json.loads(vf.read())
+        versions = version_json[cve]
     patch_date_formatted = time.strptime(patch_date, "%Y-%m-%d")
     vulnerable_releases = []  # 存在漏洞的release版本列表
     for release in release_date:
@@ -418,10 +422,12 @@ def get_target_file(base_dir, code_links, patch_date):
         if patch_date_formatted > release_date_formatted:
             vulnerable_releases.append(release)
     for t in targets:
-        for v in vulnerable_releases:
-            file_path = '{}{}/out/target/product/generic_arm64{}'.format(base_dir, v, t)
-            if os.path.exists(file_path):
-                file_paths.append(file_path)
+        for vr in vulnerable_releases:
+            for v in versions:
+                if v in vr:
+                    file_path = '{}{}/out/target/product/generic_arm64{}'.format(base_dir, vr, t)
+                    if os.path.exists(file_path):
+                        file_paths.append(file_path)
     return file_paths
 
 
@@ -444,7 +450,7 @@ if __name__ == '__main__':
         print('Affected function names: ', affected_funcs)
         print('Function total: ', len(func_list))
         base_location = "D:/work_2021/system"
-        target_files = get_target_file(base_location, code_links, patch_date)
+        target_files = get_target_file(cve, base_location, code_links, patch_date)
         print("Target files: ", target_files)
         if not target_files or len(target_files) == 0:
             print('=============={}：没找到目标文件=============='.format(cve))

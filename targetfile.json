@@ -788,16 +788,7 @@
       "/system/lib64/libui.so"
     ],
     "codepath": [
-      "/libs/ui/Fence.cpp",
-      "/libs/ui/FrameStats.cpp",
-      "/libs/ui/GraphicBuffer.cpp",
-      "/libs/ui/GraphicBufferAllocator.cpp",
-      "/libs/ui/GraphicBufferMapper.cpp",
-      "/libs/ui/HdrCapabilities.cpp",
-      "/libs/ui/PixelFormat.cpp",
-      "/libs/ui/Rect.cpp",
-      "/libs/ui/Region.cpp",
-      "/libs/ui/UiConfig.cpp"
+      "/libs/ui"
     ],
     "commonstring": "  Region %s (this=%p, count=%"
   },
@@ -898,5 +889,215 @@
       "external/libcups"
     ],
     "commonfunc": "ippSetValueTag"
+  },
+  "63": {
+    "target": [
+      "/system/lib/libsqlite.so",
+      "/system/lib64/libsqlite.so"
+    ],
+    "codepath": [
+      "external/sqlite"
+    ],
+    "commonfunc": "phone_number_stripped_reversed"
+  },
+  "64": {
+    "target": [
+      "/system/lib/libandroid.so",
+      "/system/lib64/libandroid.so"
+    ],
+    "codepath": [
+      "frameworks/base/native/android"
+    ],
+    "commonfunc": ""
+  },
+  "65": {
+    "target": [
+      "/system/lib/libandroid_runtime.so",
+      "/system/lib64/libandroid_runtime.so"
+    ],
+    "codepath": [
+      "frameworks/base/core/jni"
+    ],
+    "commonfunc": ""
+  },
+  "66": {
+    "target": [
+      "/system/lib/libandroidfw.so",
+      "/system/lib64/libandroidfw.so"
+    ],
+    "codepath": [
+      "frameworks/base/libs/androidfw"
+    ],
+    "commonfunc": ""
+  },
+  "67": {
+    "target": [
+      "/system/lib/libaudioutils.so",
+      "/system/lib64/libaudioutils.so"
+    ],
+    "codepath": [
+      "system/media/audio_utils"
+    ],
+    "commonfunc": ""
+  },
+  "68": {
+    "target": [
+      "/system/lib/libc.so",
+      "/system/lib64/libc.so"
+    ],
+    "codepath": [
+      "bionic/libc"
+    ],
+    "commonfunc": ""
+  },
+  "69": {
+    "target": [
+      "/system/lib/libcamera_client.so",
+      "/system/lib64/libcamera_client.so"
+    ],
+    "codepath": [
+      "frameworks/av/camera"
+    ],
+    "commonfunc": ""
+  },
+  "70": {
+    "target": [
+      "/system/lib/libcrypto.so",
+      "/system/lib64/libcrypto.so"
+    ],
+    "codepath": [
+      "external/openssl"
+    ],
+    "commonfunc": ""
+  },
+  "71": {
+    "target": [
+      "/system/lib/libcutils.so",
+      "/system/lib64/libcutils.so"
+    ],
+    "codepath": [
+      "system/core/libcutils"
+    ],
+    "commonfunc": ""
+  },
+  "72": {
+    "target": [
+      "/system/lib/libgui.so",
+      "/system/lib64/libgui.so"
+    ],
+    "codepath": [
+      "frameworks/native/libs/gui"
+    ],
+    "commonfunc": ""
+  },
+  "73": {
+    "target": [
+      "/system/lib/libhwui.so",
+      "/system/lib64/libhwui.so"
+    ],
+    "codepath": [
+      "frameworks/base/libs/hwui"
+    ],
+    "commonfunc": ""
+  },
+  "74": {
+    "target": [
+      "/system/lib/libhardware_legacy.so",
+      "/system/lib64/libhardware_legacy.so"
+    ],
+    "codepath": [
+      "hardware/libhardware_legacy"
+    ],
+    "commonfunc": ""
+  },
+  "75": {
+    "target": [
+      "/system/lib/libjpeg.so",
+      "/system/lib64/libjpeg.so"
+    ],
+    "codepath": [
+      "external/jpeg"
+    ],
+    "commonfunc": ""
+  },
+  "76": {
+    "target": [
+      "/system/lib/libmedia.so",
+      "/system/lib64/libmedia.so"
+    ],
+    "codepath": [
+      "frameworks/av/media/libmedia"
+    ],
+    "commonfunc": ""
+  },
+  "77": {
+    "target": [
+      "/system/lib/libnetutils.so",
+      "/system/lib64/libnetutils.so"
+    ],
+    "codepath": [
+      "system/core/libnetutils"
+    ],
+    "commonfunc": ""
+  },
+  "78": {
+    "target": [
+      "/system/lib/libstagefright_foundation.so",
+      "/system/lib64/libstagefright_foundation.so"
+    ],
+    "codepath": [
+      "frameworks/av/media/libstagefright/foundation"
+    ],
+    "commonfunc": ""
+  },
+  "79": {
+    "target": [
+      "/system/lib/libsonivox.so",
+      "/system/lib64/libsonivox.so"
+    ],
+    "codepath": [
+      "external/sonivox"
+    ],
+    "commonfunc": ""
+  },
+  "80": {
+    "target": [
+      "/system/lib/libspeexresampler.so",
+      "/system/lib64/libspeexresampler.so"
+    ],
+    "codepath": [
+      "external/speex"
+    ],
+    "commonfunc": ""
+  },
+  "81": {
+    "target": [
+      "/system/lib/libssl.so",
+      "/system/lib64/libssl.so"
+    ],
+    "codepath": [
+      "external/openssl"
+    ],
+    "commonfunc": ""
+  },
+  "82": {
+    "target": [
+      "/system/lib/libutils.so",
+      "/system/lib64/libutils.so"
+    ],
+    "codepath": [
+      "frameworks/native/libs/utils"
+    ],
+    "commonfunc": ""
+  },
+  "83": {
+    "target": [
+      "/system/lib/libusbhost.so",
+      "/system/lib64/libusbhost.so"
+    ],
+    "codepath": [
+      "system/core/libusbhost"
+    ],
+    "commonfunc": ""
   }
 }

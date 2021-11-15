@@ -16,6 +16,8 @@ from hashlib import blake2b
 
 sSecurityBulletinUri = r'https://nvd.nist.gov/vuln/detail/'
 
+project_path = 'C:/Users/13319/PycharmProjects/autoMakeMask/'
+
 FILE_EXISTS_TEMPLATE = {
     "filename": "",
     "testType": "FILE_EXISTS"
@@ -405,16 +407,16 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
 def get_target_file(cve, base_dir, code_links, patch_date):
     file_paths = []  # 本地目标文件路径
     targets = []
-    with open('targetfile.json', 'rb') as f:
+    with open(project_path + 'targetfile.json', 'rb') as f:
         tt = json.loads(f.read())
         for i, item in tt.items():
             code_path = item['codepath'][0]
             for link in code_links:
                 if code_path in link:
                     targets = item['target']
-    with open('release_date.json', 'r') as rdfile:
+    with open(project_path + 'release_date.json', 'r') as rdfile:
         release_date = json.loads(rdfile.read())
-    with open('versions.json', 'r') as vf:
+    with open(project_path + 'versions.json', 'r') as vf:
         version_json = json.loads(vf.read())
         versions = version_json[cve]
     patch_date_formatted = time.strptime(patch_date, "%Y-%m-%d")
@@ -437,6 +439,7 @@ def get_target_file(cve, base_dir, code_links, patch_date):
                         server_user = "xiaofei@172.16.124.75"
                         scp_cmd = "scp {}:{} {}".format(server_user, server_file_path, local_file_path)
                         # 复制服务器的目标文件到本地
+                        print("复制文件：{}".format(server_file_path))
                         os.system(scp_cmd)
                         # todo subprocess
                     file_paths.append(local_file_path)
@@ -459,6 +462,9 @@ if __name__ == '__main__':
         file_exists_digests = []
         mask_digests_list = {}
         affected_funcs, code_file_names, code_links, cvefeature, func_list, patch_date = process_cve(cve)
+        if len(affected_funcs) == 0:
+            print('=============={}：没找到受影响函数=============='.format(cve))
+            exit(0)
         print('Affected function names: ', affected_funcs)
         print('Function total: ', len(func_list))
         base_location = "D:/work_2021/android"
@@ -565,6 +571,7 @@ if __name__ == '__main__':
             base.update({cve: cvefeature})
             with open(feature_file, 'w') as f:
                 f.write(json.dumps(base, indent=4))
+            print('==================生成完毕==================')
 
         for name in code_file_names:
             if os.path.exists('pre_' + name) and os.path.exists('post_' + name):

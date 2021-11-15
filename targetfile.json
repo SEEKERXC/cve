@@ -860,5 +860,43 @@
       "/libwebm/mkvparser/mkvparser.cc"
     ],
     "commonfunc": "ParseElementHeader"
+  },
+  "59": {
+    "target": [
+      "/system/lib/libmediaplayerservice.so"
+    ],
+    "codepath": [
+      "libstagefright/timedtext"
+    ],
+    "commonfunc": "extractSRTLocalDescriptions"
+  },
+  "60": {
+    "target": [
+      "/system/lib64/libbinder.so",
+      "/system/lib/libbinder.so"
+    ],
+    "codepath": [
+      "libs/binder"
+    ],
+    "commonfunc": "updateWorkSourceRequestHeaderPosition"
+  },
+  "61": {
+    "target": [
+      "/system/lib64/libstagefright_soft_hevcdec.so",
+      "/system/lib/libstagefright_soft_hevcdec.so"
+    ],
+    "codepath": [
+      "external/libhevc"
+    ],
+    "commonfunc": "ihevc_weighted_pred_chroma_bi_default"
+  },
+  "62": {
+    "target": [
+      "/system/lib64/libcups.so"
+    ],
+    "codepath": [
+      "external/libcups"
+    ],
+    "commonfunc": "ippSetValueTag"
   }
 }

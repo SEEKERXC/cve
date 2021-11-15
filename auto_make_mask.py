@@ -166,6 +166,7 @@ def process_cve(cveid):
                     hasuri = True
                     levels = tds[serveid].text
                     updated_versions = tds[upverid].text.split(', ')
+                    print("影响版本：{}".format(updated_versions))
         if not hasuri: return ''
         oneid = 0
         for vr in updated_versions:
@@ -399,16 +400,17 @@ def grep_for_target(grep_location, all_functions, patch_affected_functions, base
 # 通过代码路径获取对应目标文件列表，再通过补丁日期确定相应的release，从而确定每个release的目标文件列表
 # cve: CVE编号
 # base_dir: 存放安卓文件夹的根目录
-# code_path: 完整代码路径列表
+# code_links: 完整代码路径列表
 # patch_date: 补丁发布日期，格式YYYY-mm-dd
 def get_target_file(cve, base_dir, code_links, patch_date):
-    file_paths = []
+    file_paths = []  # 本地目标文件路径
     targets = []
     with open('targetfile.json', 'rb') as f:
         tt = json.loads(f.read())
         for i, item in tt.items():
+            code_path = item['codepath'][0]
             for link in code_links:
-                if item['codepath'] in link:
+                if code_path in link:
                     targets = item['target']
     with open('release_date.json', 'r') as rdfile:
         release_date = json.loads(rdfile.read())
@@ -425,9 +427,19 @@ def get_target_file(cve, base_dir, code_links, patch_date):
         for vr in vulnerable_releases:
             for v in versions:
                 if v in vr:
-                    file_path = '{}{}/out/target/product/generic_arm64{}'.format(base_dir, vr, t)
-                    if os.path.exists(file_path):
-                        file_paths.append(file_path)
+                    local_file_path = '{}/{}/out/target/product/generic_arm64{}'.format(base_dir, vr, t)
+                    local_dir_path = local_file_path[0:local_file_path.rindex('/')]
+                    if not os.path.exists(local_dir_path):
+                        os.makedirs(local_dir_path)
+                    if not os.path.exists(local_file_path):
+                        server_file_path = '/media2_8T/android/{}/android/out/target/product/generic_arm64{}' \
+                            .format(vr, t)
+                        server_user = "xiaofei@172.16.124.75"
+                        scp_cmd = "scp {}:{} {}".format(server_user, server_file_path, local_file_path)
+                        # 复制服务器的目标文件到本地
+                        os.system(scp_cmd)
+                        # todo subprocess
+                    file_paths.append(local_file_path)
     return file_paths
 
 
@@ -445,11 +457,11 @@ if __name__ == '__main__':
         cve = sys.argv[1]
 
         file_exists_digests = []
-        mask_digests_list = []
+        mask_digests_list = {}
         affected_funcs, code_file_names, code_links, cvefeature, func_list, patch_date = process_cve(cve)
         print('Affected function names: ', affected_funcs)
         print('Function total: ', len(func_list))
-        base_location = "D:/work_2021/system"
+        base_location = "D:/work_2021/android"
         target_files = get_target_file(cve, base_location, code_links, patch_date)
         print("Target files: ", target_files)
         if not target_files or len(target_files) == 0:
@@ -458,7 +470,9 @@ if __name__ == '__main__':
 
         canGen = False
         base = {}
+        mask_values = []
         for target in target_files:
+            if not os.path.exists(target): continue
             symbols = get_symbol_of_target(target, affected_funcs)  # 受影响的函数符号
             offset = get_offset(target)  # 基础偏移
             if symbols and len(symbols) > 0:
@@ -468,8 +482,9 @@ if __name__ == '__main__':
                 file_exists = FILE_EXISTS_TEMPLATE.copy()
                 file_exists['filename'] = target[str(target).index('/system'):]
                 file_exists_digest = gen_digest(file_exists)
-                file_exists_digests.append(file_exists_digest)
-                base.update({file_exists_digest: file_exists})
+                if file_exists_digest not in file_exists_digests:
+                    file_exists_digests.append(file_exists_digest)
+                    base.update({file_exists_digest: file_exists})
 
                 masks = []
                 mask_digests = []
@@ -479,6 +494,8 @@ if __name__ == '__main__':
                     addr = hex(addr)
                     length = hex(int(symbol['st_size']))
                     mask = make_mask(target, addr, length)
+                    if mask in mask_values: continue
+                    mask_values.append(mask)
                     mask_feature = {
                         'filename': target[str(target).index('/system'):],
                         'signature': mask,
@@ -495,23 +512,29 @@ if __name__ == '__main__':
                         if d not in mask_digests:
                             mask_digests.append(d)
                         base.update({d: mask_feature})
-                mask_digests_list.append(mask_digests)
+                if file_exists_digest in mask_digests_list:
+                    mask_digests_list[file_exists_digest] += mask_digests
+                else:
+                    mask_digests_list[file_exists_digest] = mask_digests
 
-        basic_file = '{}/{}-BASIC.json'.format(cve, cve)
+        base_path = "D:/work_2021/CVE/automask"
+        basic_file_path = '{}/{}/{}-BASIC.json'.format(base_path, cve, cve)
 
         if canGen:
-            with open(basic_file, 'w') as f:
+            if not os.path.exists("{}/{}".format(base_path, cve)):
+                os.mkdir("{}/{}".format(base_path, cve))
+            with open(basic_file_path, 'w') as f:
                 f.write(json.dumps(base, indent=4))
 
         if len(file_exists_digests) == 1:
-            if len(mask_digests_list[0]) == 1:
+            if len(mask_digests_list[file_exists_digests[0]]) == 1:
                 cvefeature['testVulnerable']['subtests'] = [file_exists_digests[0], mask_digests_list[0][0]]
             else:
                 mask_list = {
                     'subtests': [],
                     'testType': 'OR'
                 }
-                for d in mask_digests_list[0]:
+                for d in mask_digests_list[file_exists_digests[0]]:
                     mask_list['subtests'].append(d)
                 cvefeature['testVulnerable']['subtests'].append(file_exists_digests[0])
                 cvefeature['testVulnerable']['subtests'].append(mask_list)
@@ -519,7 +542,7 @@ if __name__ == '__main__':
             cvefeature['testVulnerable']['testType'] = 'OR'
             for i in range(len(file_exists_digests)):
                 file_exists_digest = file_exists_digests[i]
-                masks = mask_digests_list[i]
+                masks = mask_digests_list[file_exists_digest]
                 feature_of_one_file = {
                     'subtests': [],
                     'testType': 'AND'
@@ -535,7 +558,7 @@ if __name__ == '__main__':
                     feature_of_one_file['subtests'].append(mask_list)
 
                 cvefeature['testVulnerable']['subtests'].append(feature_of_one_file)
-        feature_file = '{}/{}.json'.format(cve, cve)
+        feature_file = '{}/{}/{}.json'.format(base_path, cve, cve)
 
         if canGen:
             base = {}

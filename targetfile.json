@@ -808,35 +808,57 @@
     "codepath": [
       "/packages/services/Telephony/"
     ],
-    "zipitem": "AndroidManifest.xml",
+    "zipitem": [
+      "AndroidManifest.xml"
+    ],
     "commonstring": "com.android.services.telephony.activation.SimActivationActivity"
   },
   "54": {
     "target": [
-      "/system/system_ext/priv-app/Settings/Settings.apk"
+      "/system/app/Launcher3/oat/arm64/Launcher3.odex"
     ],
     "codepath": [
-      "/packages/apps/Settings"
+      "/packages/apps/Launcher3/"
     ],
-    "zipitem": "classes.dex",
-    "commonstring": "getPreferenceScreenResId"
+    "commonstring": "com.android.launcher3.intent.extra.shortcut.INGORE_LAUNCH_ANIMATION"
   },
   "55": {
     "target": [
-      "/system/priv-app/VpnDialogs/VpnDialogs.apk"
+      "/system/lib/libft2.so",
+      "/system/lib64/libft2.so"
     ],
     "codepath": [
-      "/packages/VpnDialogs"
+      "/external/freetype/"
     ],
-    "zipitem": "classes.dex",
-    "commonstring": "fail to call getAlwaysOnVpnPackage"
+    "commonstring": "libft2.so"
   },
   "56": {
     "target": [
-      "/system/priv-app/Settings/oat/arm64/Settings.odex",
-      "/system/priv-app/SystemUI/oat/arm64/SystemUI.odex"
+      "/system/priv-app/Settings/oat/arm64/Settings.odex"
     ],
-    "codepath": "/packages/SettingsLib",
-    "commonstring": "onProfileStateChanged"
+    "codepath": [
+      "/packages/apps/Settings/"
+    ],
+    "commonstring": "AccessiblePreferenceCategory"
+  },
+  "57": {
+    "target": [
+      "/vendor/lib/nfc_nci_nxp.so",
+      "/vendor/lib64/nfc_nci_nxp.so"
+    ],
+    "codepath": [
+      "/hardware/nxp/nfc/"
+    ],
+    "commonfunc": "_Z27phNxpNciHal_process_ext_rspPhPt"
+  },
+  "58": {
+    "target": [
+      "/system/lib/libstagefright.so",
+      "/system/lib64/libstagefright.so"
+    ],
+    "codepath": [
+      "/libwebm/mkvparser/mkvparser.cc"
+    ],
+    "commonfunc": "ParseElementHeader"
   }
 }

@@ -331,10 +331,6 @@
       "/system/lib64/libnfc-nci-45-66t.so",
       "/system/lib64/libnfc-nci-45-553.so",
       "/system/lib64/libnfc-nxp-nci.so",
-      "/system/lib/libnfc-nci-45-66t.so",
-      "/system/lib/libnfc-nci-45-553.so",
-      "/system/lib64/libnfc-nci-45-551.so",
-      "/system/lib64/libnfc-nci-45-548.so",
       "/system/lib/libnfc-nci.so"
     ],
     "codepath": [
@@ -379,7 +375,8 @@
   },
   "25": {
     "target": [
-      "/system/app/Bluetooth/Bluetooth.apk"
+      "/system/lib/libbluetooth_jni.so",
+      "/system/lib64/libbluetooth_jni.so"
     ],
     "codepath": [
       "/packages/apps/Bluetooth/"
@@ -432,7 +429,8 @@
   "29": {
     "target": [
       "/system/lib/libstagefright_soft_mpeg4dec.so",
-      "/system/lib64/libstagefright_soft_mpeg4dec.so"
+      "/system/lib64/libstagefright_soft_mpeg4dec.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib/libstagefright_soft_mpeg4enc.so"
     ],
     "codepath": [
       "/libstagefright/codecs/m4v_h263/dec/src"
@@ -558,7 +556,9 @@
   "39": {
     "target": [
       "/system/lib/libstagefright_soft_avcdec.so",
-      "/system/lib64/libstagefright_soft_avcdec.so"
+      "/system/lib64/libstagefright_soft_avcdec.so",
+      "/system/lib/vndk-28/libstagefright_soft_avcdec.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib/libstagefright_soft_avcdec.so"
     ],
     "codepath": [
       "common/ih264_buf_mgr.c",
@@ -764,7 +764,8 @@
   "50": {
     "target": [
       "/system/lib/libstagefright_soft_mp3dec.so",
-      "/system/lib64/libstagefright_soft_mp3dec.so"
+      "/system/lib64/libstagefright_soft_mp3dec.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib/libstagefright_soft_mp3dec.so"
     ],
     "codepath": [
       "/media/libstagefright/codecs/mp3dec/"
@@ -874,7 +875,8 @@
   "61": {
     "target": [
       "/system/lib64/libstagefright_soft_hevcdec.so",
-      "/system/lib/libstagefright_soft_hevcdec.so"
+      "/system/lib/libstagefright_soft_hevcdec.so",
+      "/system/lib/vndk-28/libstagefright_soft_hevcdec.so"
     ],
     "codepath": [
       "external/libhevc"
@@ -1099,5 +1101,190 @@
       "system/core/libusbhost"
     ],
     "commonfunc": ""
+  },
+  "84": {
+    "target": [
+      "/system/lib/libpac.so",
+      "/system/lib64/libpac.so"
+    ],
+    "codepath": [
+      "external/v8"
+    ],
+    "commonfunc": "HasComplexElements"
+  },
+  "85": {
+    "target": [
+      "/system/lib/libexif.so",
+      "/system/lib64/libexif.so"
+    ],
+    "codepath": [
+      "external/libexif"
+    ],
+    "commonfunc": "exif_data_new_mem"
+  },
+  "86": {
+    "target": [
+      "/system/lib/libutils.so",
+      "/system/lib64/libutils.so",
+      "/system/lib/vndk-sp-28/libutils.so",
+      "/system/lib64/vndk-sp-28/libutils.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib/libutils.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib64/libutils.so"
+    ],
+    "codepath": [
+      "libutils/"
+    ],
+    "commonfunc": "terminate_string16"
+  },
+  "87": {
+    "target": [
+      "/system/lib/libstagefright_soft_mpeg2dec.so",
+      "/system/lib64/libstagefright_soft_mpeg2dec.so",
+      "/system/lib/vndk-28/libstagefright_soft_mpeg2dec.so"
+    ],
+    "codepath": [
+      "external/libmpeg2"
+    ],
+    "commonfunc": ""
+  },
+  "88": {
+    "target": [
+      "/system/lib/libstagefright_soft_mpeg4dec.so",
+      "/system/lib64/libstagefright_soft_mpeg4dec.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib/libstagefright_soft_mpeg4dec.so"
+    ],
+    "codepath": [
+      "media/libstagefright/codecs/m4v_h263"
+    ],
+    "commonfunc": "PV_VlcDecMCBPC_com_inter"
+  },
+  "89": {
+    "target": [
+      "/system/lib/libstagefright_soft_vpxenc.so",
+      "/system/lib64/libstagefright_soft_vpxenc.so"
+    ],
+    "codepath": [
+      "libvpx/vpx"
+    ],
+    "commonfunc": "vpx_img_wrap"
+  },
+  "90": {
+    "target": [
+      "/system/lib/libandroidfw.so",
+      "/system/lib64/libandroidfw.so"
+    ],
+    "codepath": [
+      "libs/androidfw"
+    ],
+    "commonfunc": ""
+  },
+  "91": {
+    "target": [
+      "/system/lib/libstagefright_soft_avcenc.so",
+      "/system/lib64/libstagefright_soft_avcenc.so",
+      "/system/system_ext/apex/com.android.vndk.v28/lib/libstagefright_soft_avcenc.so"
+    ],
+    "codepath": [
+      "common/ih264_resi_trans_quant.c",
+      "common/ih264_iquant_itrans_recon.c",
+      "common/ih264_ihadamard_scaling.c",
+      "common/ih264_inter_pred_filters.c",
+      "common/ih264_luma_intra_pred_filters.c",
+      "common/ih264_chroma_intra_pred_filters.c",
+      "common/ih264_padding.c",
+      "common/ih264_mem_fns.c",
+      "common/ih264_deblk_edge_filters.c",
+      "common/ih264_deblk_tables.c",
+      "common/ih264_cavlc_tables.c",
+      "common/ih264_cabac_tables.c",
+      "common/ih264_common_tables.c",
+      "common/ih264_trans_data.c",
+      "common/ih264_buf_mgr.c",
+      "common/ih264_dpb_mgr.c",
+      "common/ih264_list.c",
+      "common/ithread.c",
+      "encoder/ih264e_globals.c",
+      "encoder/ih264e_intra_modes_eval.c",
+      "encoder/ih264e_half_pel.c",
+      "encoder/ih264e_mc.c",
+      "encoder/ih264e_me.c",
+      "encoder/ih264e_rc_mem_interface.c",
+      "encoder/ih264e_time_stamp.c",
+      "encoder/ih264e_modify_frm_rate.c",
+      "encoder/ih264e_rate_control.c",
+      "encoder/ih264e_core_coding.c",
+      "encoder/ih264e_deblk.c",
+      "encoder/ih264e_api.c",
+      "encoder/ih264e_process.c",
+      "encoder/ih264e_encode.c",
+      "encoder/ih264e_utils.c",
+      "encoder/ih264e_version.c",
+      "encoder/ih264e_bitstream.c",
+      "encoder/ih264e_cavlc.c",
+      "encoder/ih264e_cabac_init.c",
+      "encoder/ih264e_cabac.c",
+      "encoder/ih264e_cabac_encode.c",
+      "encoder/ih264e_encode_header.c",
+      "encoder/ih264e_function_selector_generic.c",
+      "encoder/ih264e_fmt_conv.c",
+      "encoder/irc_rate_control_api.c",
+      "encoder/irc_bit_allocation.c",
+      "encoder/irc_cbr_buffer_control.c",
+      "encoder/irc_est_sad.c",
+      "encoder/irc_fixed_point_error_bits.c",
+      "encoder/irc_frame_info_collector.c",
+      "encoder/irc_mb_model_based.c",
+      "encoder/irc_picture_type.c",
+      "encoder/irc_rd_model.c",
+      "encoder/irc_vbr_storage_vbv.c",
+      "encoder/irc_vbr_str_prms.c",
+      "encoder/ime.c",
+      "encoder/ime_distortion_metrics.c"
+    ],
+    "commonfunc": "ih264e_codec_update_config"
+  },
+  "92": {
+    "target": [
+      "/system/lib64/libadbd_services.so",
+      "/system/lib64/libfs_mgr.so",
+      "/system/bin/avbctl",
+      "/system/bin/remount"
+    ],
+    "codepath": [
+      "external/avb"
+    ],
+    "commonfunc": "avb_vbmeta_image_header_to_host_byte_order"
+  },
+  "93": {
+    "target": [
+      "/system/lib/vndk-29/libyuv.so",
+      "/system/lib/vndk-28/libyuv.so",
+      "/system/lib/libyuv.so",
+      "/system/lib64/vndk-29/libyuv.so",
+      "/system/lib64/vndk-28/libyuv.so"
+    ],
+    "codepath": [
+      "external/libyuv"
+    ],
+    "commonfunc": "ValidateJpeg"
+  },
+  "94": {
+    "target": [
+      "/system/lib/libcrypto.so",
+      "/system/lib64/libcrypto.so"
+    ],
+    "codepath": [
+      "src/crypto"
+    ],
+    "commonfunc": "GENERAL_NAME_cmp"
+  },
+  "95": {
+    "target": [
+      "/system/bin/vold"
+    ],
+    "codepath": [
+      "system/vold"
+    ],
+    "commonfunc": "cryptfs_changepw"
   }
 }

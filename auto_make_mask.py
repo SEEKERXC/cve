@@ -109,7 +109,6 @@ def process_cve(cveid):
         summary = summary.split('<p>')[-1]
     cvefeature['title'] = summary
     # 解析公告页面，提出diff链接
-    hasuri = False
     for tb in tbs:
         trs = tb.xpath('.//tr')
         for tr in trs:
@@ -122,8 +121,8 @@ def process_cve(cveid):
                     upverid = thid
             tds = tr.xpath('.//td')
             for tdid in range(len(tds)):
-                if len(tds) < 3: continue
-                if tds[tdid].text != cveid: continue
+                if len(tds) <= 3: continue
+                if str(tds[tdid].text).strip() != cveid: continue
                 diffuris = [a.get('href') for a in tds[tdid + 1].xpath('.//a')]
                 print(diffuris)
 
@@ -135,11 +134,11 @@ def process_cve(cveid):
                     patch_date = link[(link.rindex('/') + 1):]
                     cvefeature['category'] = patch_date[0:7]
                 if not isgoogleuri: continue
-                hasuri = True
-                levels = tds[serveid].text
+                levels = str(tds[serveid].text).strip()
                 updated_versions = tds[upverid].text.split(', ')
+                for j in range(len(updated_versions)):
+                    updated_versions[j] = str(updated_versions[j]).strip()
                 print("影响版本：{}".format(updated_versions))
-    if not hasuri: return None, None, None, None, None, None
     oneid = 0
     for vr in updated_versions:
         if vr.startswith("4"): oneid += 1
@@ -216,7 +215,8 @@ def process_cve(cveid):
                 code_spans = tr.xpath('td[2]/span')
                 line = ''
                 for s in code_spans:
-                    line += s.text
+                    if s is not None and s.text is not None:
+                        line += s.text
                 f_pre.write("{}\n".format(line))
             f_pre.flush()
             f_pre.close()
@@ -226,7 +226,8 @@ def process_cve(cveid):
                 code_spans = tr.xpath('td[2]/span')
                 line = ''
                 for s in code_spans:
-                    line += s.text
+                    if s is not None and s.text is not None:
+                        line += s.text
                 f_post.write("{}\n".format(line))
             f_post.flush()
             f_post.close()
@@ -379,10 +380,11 @@ def get_target_file(cve, base_dir, code_links, patch_date):
     with open(project_path + 'targetfile.json', 'rb') as f:
         tt = json.loads(f.read())
         for i, item in tt.items():
-            code_path = item['codepath'][0]
+            code_paths = item['codepath']
             for link in code_links:
-                if code_path in link:
-                    targets = item['target']
+                for code_path in code_paths:
+                    if code_path in link:
+                        targets = item['target']
     with open(project_path + 'release_date.json', 'r') as rdfile:
         release_date = json.loads(rdfile.read())
     with open(project_path + 'versions.json', 'r') as vf:
@@ -433,6 +435,11 @@ if __name__ == '__main__':
         affected_funcs, code_file_names, code_links, cvefeature, func_list, patch_date = process_cve(cve)
         if not affected_funcs or len(affected_funcs) == 0:
             print('=============={}：没找到受影响函数=============='.format(cve))
+            if code_file_names is not None:
+                for name in code_file_names:
+                    if os.path.exists('pre_' + name) and os.path.exists('post_' + name):
+                        os.remove('pre_' + name)
+                        os.remove('post_' + name)
             exit(0)
         print('Affected function names: ', affected_funcs)
         print('Function total: ', len(func_list))
@@ -441,14 +448,25 @@ if __name__ == '__main__':
         print("Target files: ", target_files)
         if not target_files or len(target_files) == 0:
             print('=============={}：没找到目标文件=============='.format(cve))
+            for name in code_file_names:
+                if os.path.exists('pre_' + name) and os.path.exists('post_' + name):
+                    os.remove('pre_' + name)
+                    os.remove('post_' + name)
             exit(0)
 
         canGen = False
         base = {}
         mask_values = []
+        file_exists = False
+        for target in target_files:
+            if not os.path.exists(target): file_exists = True
+        if not file_exists:
+            print("======没有目标文件======")
         for target in target_files:
             if not os.path.exists(target): continue
             symbols = get_symbol_of_target(target, affected_funcs)  # 受影响的函数符号
+            if not symbols or len(symbols) == 0:
+                print('==============找不到对应的函数符号=============='.format(target))
             offset = get_offset(target)  # 基础偏移
             if symbols and len(symbols) > 0:
                 print('==============正在生成 {} 的特征=============='.format(target))
@@ -503,7 +521,8 @@ if __name__ == '__main__':
 
         if len(file_exists_digests) == 1:
             if len(mask_digests_list[file_exists_digests[0]]) == 1:
-                cvefeature['testVulnerable']['subtests'] = [file_exists_digests[0], mask_digests_list[0][0]]
+                cvefeature['testVulnerable']['subtests'] = [file_exists_digests[0],
+                                                            mask_digests_list[file_exists_digests[0]][0]]
             else:
                 mask_list = {
                     'subtests': [],

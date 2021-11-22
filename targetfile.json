@@ -4,14 +4,9 @@
       "/system/lib/hw/bluetooth.default.so",
       "/system/vendor/lib/hw/bluetooth.default.so",
       "/system/vendor/lib64/hw/bluetooth.default.so",
-      "/system/lib/libbluetooth_stack_mtk.so",
-      "/system/lib64/hw/bplus.default.so",
       "/system/lib64/hw/bluetooth.default.so",
-      "/system/lib/hw/bplus.default.so",
       "/system/lib/libbluetooth.so",
-      "/system/lib64/libbluetooth.so",
-      "/system/lib/libbluetooth_qti.so",
-      "/system/lib64/libluetooth_qti.so"
+      "/system/lib64/libbluetooth.so"
     ],
     "codepath": [
       "/platform/system/bt/"
@@ -220,49 +215,7 @@
   "15": {
     "target": [
       "/system/lib/libframesequence.so",
-      "/system/lib64/libframesequence.so",
-      "/system/app/PrebuiltBugle/lib/arm/libframesequence.so",
-      "/system/priv-app/PlusOne/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/Photos/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/Velvet/lib/arm/libframesequence.so",
-      "/system/app/Youtube/lib/armeabi-v7a/libframesequence.so",
-      "/system/priv-app/Velvet/lib/arm/libframesequence.so",
-      "/system/priv-app/PlusOne/lib/arm/libframesequence.so",
-      "/system/app/Hangouts/lib/arm/libframesequence.so",
-      "/system/app/PrebuiltBugle/lib/arm64-v8a/libframesequence.so",
-      "/system/app/Bugle/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/Velvet/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/PrebuiltBugle/lib/armeabi-v7a/libframesequence.so",
-      "/system/priv-app/Youtube/lib/armeabi-v7a/libframesequence.so",
-      "/system/priv-app/PrebuiltBugle/lib/arm/libframesequence.so",
-      "/system/app/Bugle/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/Hangouts/lib/arm/libframesequence.so",
-      "/system/app/PlusOne/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/Photos/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/Youtube/lib/arm/libframesequence.so",
-      "/system/priv-app/Photos/lib/arm/libframesequence.so",
-      "/system/priv-app/Youtube/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/Photos/lib/arm64-v8a/libframesequence.so",
-      "/system/app/Velvet/lib/arm64-v8a/libframesequence.so",
-      "/system/app/Hangouts/lib/armeabi-v7a/libframesequence.so",
-      "/system/priv-app/Hangouts/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/Photos/lib/arm/libframesequence.so",
-      "/system/app/Hangouts/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/Velvet/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/PrebuiltBugle/lib/armeabi-v7a/libframesequence.so",
-      "/system/app/PlusOne/lib/arm/libframesequence.so",
-      "/system/priv-app/Bugle/lib/arm64-v8a/libframesequence.so",
-      "/system/app/Bugle/lib/arm/libframesequence.so",
-      "/system/app/PlusOne/lib/armeabi-v7a/libframesequence.so",
-      "/system/priv-app/Bugle/lib/armeabi-v7a/libframesequence.so",
-      "/system/priv-app/Youtube/lib/arm/libframesequence.so",
-      "/system/priv-app/Hangouts/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/PrebuiltBugle/lib/arm64-v8a/libframesequence.so",
-      "/system/app/Photos/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/PlusOne/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/Bugle/lib/arm/libframesequence.so",
-      "/system/app/Youtube/lib/arm64-v8a/libframesequence.so",
-      "/system/priv-app/Velvet/lib/armeabi-v7a/libframesequence.so"
+      "/system/lib64/libframesequence.so"
     ],
     "codepath": [
       "/framesequence/"
@@ -1286,5 +1239,110 @@
       "system/vold"
     ],
     "commonfunc": "cryptfs_changepw"
+  },
+  "96": {
+    "target": [
+      "/system/lib/libmediaplayerservice.so",
+      "/system/lib/libstagefright.so",
+      "/system/lib64/libstagefright.so",
+      "/system/lib/libmedia2_jni.so",
+      "/system/lib64/libmedia2_jni.so"
+    ],
+    "codepath": [
+      "media/libstagefright"
+    ],
+    "commonfunc": "canOffloadStream"
+  },
+  "97": {
+    "target": [
+      "/system/lib/libskia.so",
+      "/system/lib64/libskia.so"
+    ],
+    "codepath": [
+      "external/skia"
+    ],
+    "commonfunc": "S32_D565_Blend_Dither_neon"
+  },
+  "98": {
+    "target": [
+      "/system/lib/hw/bluetooth.default.so"
+    ],
+    "codepath": [
+      "external/bluetooth"
+    ],
+    "commonfunc": "BTM_SecRegisterLinkKeyNotificationCallback"
+  },
+  "99": {
+    "target": [
+      "/system/lib/libwifi-service.so",
+      "/system/lib64/libwifi-service.so"
+    ],
+    "codepath": [
+      "bcmdhd/wifi_hal"
+    ],
+    "commonfunc": "wifi_cleanup"
+  },
+  "100": {
+    "target": [
+      "/system/lib/libjhead.so",
+      "/system/lib64/libjhead.so"
+    ],
+    "codepath": [
+      "external/jhead"
+    ],
+    "commonfunc": "ProcessExifDir"
+  },
+  "101": {
+    "target": [
+      "/system/lib/libjavacrypto.so",
+      "/system/lib64/libjavacrypto.so"
+    ],
+    "codepath": [
+      "external/conscrypt"
+    ],
+    "commonfunc": "info_callback"
+  },
+  "102": {
+    "target": [
+      "/system/lib/libstagefright_soft_vpxdec.so",
+      "/system/lib64/libstagefright_soft_vpxdec.so"
+    ],
+    "codepath": [
+      "libvpx/vp8",
+      "libvpx/vp9"
+    ],
+    "commonfunc": "vp8_decode"
+  },
+  "103": {
+    "target": [
+      "/system/lib/libexpat.so",
+      "/system/lib64/libexpat.so"
+    ],
+    "codepath": [
+      "external/expat"
+    ],
+    "commonfunc": "XmlSizeOfUnknownEncoding"
+  },
+  "104": {
+    "target": [
+      "/system/lib/libxml2.so",
+      "/system/lib64/libxml2.so"
+    ],
+    "codepath": [
+      "external/libxml2"
+    ],
+    "commonfunc": "xmlParsePEReference"
+  },
+  "105": {
+    "target": [
+      "/system/lib/libcamera_client.so",
+      "/system/lib/libcamera_metadata.so",
+      "/system/lib64/libcamera_client.so",
+      "/system/lib64/libcamera_metadata.so"
+    ],
+    "codepath": [
+      "camera"
+    ],
+    "commonfunc": "allocate_copy_camera_metadata_checked"
   }
 }

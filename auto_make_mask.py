@@ -100,7 +100,7 @@ def process_cve(cveid):
     tbs = html_text2.xpath('//table')
 
     tags = re.findall(r'([a-zA-Z \n\-\.\(\)]{0,})</p>\n{0,3}\<table\>(.*?)\</table\>', html_r2.text, re.S)
-    summary: str = None
+    summary: str = ''
     for t in tags:
         if cveid in t[1]:
             summary = t[0].replace('\n', ' ')
@@ -115,9 +115,7 @@ def process_cve(cveid):
             ths = tr.xpath('.//th')
             for thid in range(len(ths)):
                 if ths[thid].text == "Severity": serveid = thid
-                if ths[thid].text == "Updated AOSP versions":
-                    upverid = thid
-                elif ths[thid].text == "Updated versions":
+                if "versions" in ths[thid].text:
                     upverid = thid
             tds = tr.xpath('.//td')
             for tdid in range(len(tds)):
@@ -135,8 +133,21 @@ def process_cve(cveid):
                     cvefeature['category'] = patch_date[0:7]
                 if not isgoogleuri: continue
                 levels = str(tds[serveid].text).strip()
-                updated_versions = tds[upverid].text.split(', ')
+                updated_versions = []
+                if ',' in tds[upverid].text:
+                    updated_versions = tds[upverid].text.split(', ')
+                else:
+                    if '5.1' in tds[upverid].text:
+                        updated_versions.append('5.1')
+                    elif '5.0' in tds[upverid].text:
+                        updated_versions.append('5.0')
+                    elif '6.0' in tds[upverid].text:
+                        updated_versions.append('6.0')
+                if len(updated_versions) == 0:
+                    updated_versions = tds[upverid].text.split(".")
                 for j in range(len(updated_versions)):
+                    if 'and' in updated_versions[j]:
+                        updated_versions[j] = str(updated_versions[j]).replace('and', '').strip()
                     updated_versions[j] = str(updated_versions[j]).strip()
                 print("影响版本：{}".format(updated_versions))
     oneid = 0
@@ -148,8 +159,6 @@ def process_cve(cveid):
 
     # diff页面
     for uri in diffuris:
-        if 'https' not in uri or 'http' not in uri:
-            uri = 'https:' + uri
         html_r3 = requests.get(uri, timeout=60, headers=headers, proxies=proxies)
         html_text3 = etree.HTML(html_r3.text)
         aa = html_text3.xpath('//a')
@@ -164,79 +173,96 @@ def process_cve(cveid):
         # 找到代码链接以及对应的行数
         html_r4 = requests.get(diff_detail, timeout=60, headers=headers, proxies=proxies)
         html_text4 = etree.HTML(html_r4.text)
-        aa = html_text4.xpath('//a')
-        aa_texts = []
-        for a in aa:
-            aa_texts.append(a.text)
+        diffs = html_text4.xpath("//pre[@class='u-pre u-monospace Diff']")
+        diff_unifies = html_text4.xpath("//pre[@class='u-pre u-monospace Diff-unified']")
+        for k in range(len(diffs)):
+            diff = diffs[k]
+            diff_unified = diff_unifies[k]
 
-        print('==================代码文件名与链接==================')
-        for a in aa:
-            text = a.text
-            if isinstance(text, str) and text.startswith("b/") \
-                    and (text.endswith('.cc') or text.endswith('.c')
-                         or text.endswith('.cpp')):
-                if ('a/' + text[2:]) in aa_texts:  # 仅对修改过的c/c++代码
-                    post_url = 'https://android.googlesource.com{}'.format(a.get('href'))
-                    patched_code_links.append(post_url)
-                    name = text[(text.rindex('/') + 1):]
-                    filenames.append(name)
-                    print('file name:  ', name)
-                    print('post-patch: ', post_url)
-                    for link in aa:
-                        if link.text == 'a/' + text[2:]:
-                            pre_url = 'https://android.googlesource.com{}'.format(link.get('href'))
-                            original_code_links.append(pre_url)
-                            print('pre-patch:  ', pre_url)
-        spans = html_text4.xpath("//span[@class='Diff-hunk']")
-        linenos = []  # 找到修改后的代码对应的行数
-        for span in spans:
-            index_start = str(span.text).index('+') + 1
-            index_end = str(span.text).index(',', index_start)
-            t = str(span.text)[index_start:index_end]
-            lineno = int(t)
-            linenos.append(lineno)
+            aa = diff.xpath('.//a')
+            aa_texts = []
+            for a in aa:
+                aa_texts.append(a.text)
 
-        for i in range(len(original_code_links)):
-            original_link = original_code_links[i]
-            patched_link = patched_code_links[i]
-            name = filenames[i]
+            print('==================代码文件名与链接==================')
+            for a in aa:
+                text = a.text
+                if isinstance(text, str) and text.startswith("b/") \
+                        and (text.endswith('.cc') or text.endswith('.c')
+                             or text.endswith('.cpp')):
+                    if ('a/' + text[2:]) in aa_texts:  # 仅对修改过的c/c++代码
+                        post_url = 'https://android.googlesource.com{}'.format(a.get('href'))
+                        patched_code_links.append(post_url)
+                        name = text[(text.rindex('/') + 1):]
+                        filenames.append(name)
+                        print('file name:  ', name)
+                        print('post-patch: ', post_url)
+                        for link in aa:
+                            if link.text == 'a/' + text[2:]:
+                                pre_url = 'https://android.googlesource.com{}'.format(link.get('href'))
+                                original_code_links.append(pre_url)
+                                print('pre-patch:  ', pre_url)
+            spans = diff_unified.xpath("//span[@class='Diff-hunk']")  # hunk：猛男
+            linenos = []  # 找到修改后的代码对应的行数
+            for span in spans:
+                if ',' not in str(span.text): continue
+                index_start = str(span.text).index('+') + 1
+                index_end = str(span.text).index(',', index_start)
+                t = str(span.text)[index_start:index_end]
+                lineno = int(t)
+                linenos.append(lineno)
 
-            html_r_pre = requests.get(original_link, timeout=60, headers=headers, proxies=proxies)
-            html_r_post = requests.get(patched_link, timeout=60, headers=headers, proxies=proxies)
-            html_text_pre = etree.HTML(html_r_pre.text)
-            html_text_post = etree.HTML(html_r_post.text)
+            for i in range(len(original_code_links)):
+                original_link = original_code_links[i]
+                patched_link = patched_code_links[i]
+                name = filenames[i]
 
-            # 从代码页面提取出代码，保存到文件中
-            trs_pre = html_text_pre.xpath('//tr')
-            trs_post = html_text_post.xpath('//tr')
+                html_r_pre = requests.get(original_link, timeout=60, headers=headers, proxies=proxies)
+                html_r_post = requests.get(patched_link, timeout=60, headers=headers, proxies=proxies)
+                html_text_pre = etree.HTML(html_r_pre.text)
+                html_text_post = etree.HTML(html_r_post.text)
 
-            f_pre = open('pre_' + name, 'w', encoding="utf-8")
-            for tr in trs_pre:
-                code_spans = tr.xpath('td[2]/span')
-                line = ''
-                for s in code_spans:
-                    if s is not None and s.text is not None:
-                        line += s.text
-                f_pre.write("{}\n".format(line))
-            f_pre.flush()
-            f_pre.close()
+                # 从代码页面提取出代码，保存到文件中
+                trs_pre = html_text_pre.xpath('//tr')
+                trs_post = html_text_post.xpath('//tr')
 
-            f_post = open('post_' + name, 'w', encoding="utf-8")
-            for tr in trs_post:
-                code_spans = tr.xpath('td[2]/span')
-                line = ''
-                for s in code_spans:
-                    if s is not None and s.text is not None:
-                        line += s.text
-                f_post.write("{}\n".format(line))
-            f_post.flush()
-            f_post.close()
+                f_pre = open('pre_' + name, 'w', encoding="utf-8")
+                for tr in trs_pre:
+                    code_spans = tr.xpath('td[2]/span')
+                    line = ''
+                    for s in code_spans:
+                        if s is not None and s.text is not None:
+                            line += s.text
+                    if '::' in line:
+                        ri = line.rindex('::')
+                        if ' ' in line[0:ri]:
+                            li = line.rindex(' ', 0, ri)
+                            line = line[0: li + 1] + line[ri + 2: len(line)]
+                    f_pre.write("{}\n".format(line))
+                f_pre.flush()
+                f_pre.close()
 
-            # 从代码文件找到修改行对应的函数
-            for lineno in linenos:
-                func_name, func_list = find_func_name_by_lineno('post_' + name, lineno)
-                if func_name and func_name not in func_names:
-                    func_names.append(func_name)
+                f_post = open('post_' + name, 'w', encoding="utf-8")
+                for tr in trs_post:
+                    code_spans = tr.xpath('td[2]/span')
+                    line = ''
+                    for s in code_spans:
+                        if s is not None and s.text is not None:
+                            line += s.text
+                    if '::' in line:
+                        ri = line.rindex('::')
+                        if ' ' in line[0:ri]:
+                            li = line.rindex(' ', 0, ri)
+                            line = line[0: li + 1] + line[ri + 2: len(line)]
+                    f_post.write("{}\n".format(line))
+                f_post.flush()
+                f_post.close()
+
+                # 从代码文件找到修改行对应的函数
+                for lineno in linenos:
+                    func_name, func_list = find_func_name_by_lineno('post_' + name, lineno)
+                    if func_name and func_name not in func_names:
+                        func_names.append(func_name)
     return func_names, filenames, patched_code_links, cvefeature, func_list, patch_date
 
 

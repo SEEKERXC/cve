@@ -67,7 +67,7 @@ VERSION_LEVEL = {
 # returns: 受补丁影响的函数名、代码文件名、代码完整路径、cve特征、修改后的代码的所有函数名、发布日期
 def process_cve(cveid):
     bulletin_url = ''
-    with open("cves-complete.json", 'r') as f:
+    with open(project_path + "cves-complete.json", 'r') as f:
         result = json.loads(f.read())['result']
     for item in result:
         if item['CVE'] == cveid:
@@ -294,8 +294,9 @@ def get_offset(filename):
 
 # 执行makeMask.exe获取mask_signature
 def make_mask(elffile, func_offset, func_len):
-    process = subprocess.Popen('makeMask.exe -f {} -offset {} -l {}'.format(elffile, func_offset, func_len),
-                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(
+        project_path + 'makeMask.exe -f {} -offset {} -l {}'.format(elffile, func_offset, func_len),
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     return str(out, 'utf-8')[:-2]  # 去掉结尾的\r\n
 
@@ -493,9 +494,12 @@ if __name__ == '__main__':
             symbols = get_symbol_of_target(target, affected_funcs)  # 受影响的函数符号
             if not symbols or len(symbols) == 0:
                 print('==============找不到对应的函数符号=============='.format(target))
+            else:
+                print('Affected symbols: {}'.format(symbols))
             offset = get_offset(target)  # 基础偏移
             if symbols and len(symbols) > 0:
-                print('==============正在生成 {} 的特征=============='.format(target))
+
+                print('=============={} 正在生成 {} 的特征=============='.format(cve, target))
                 canGen = True
 
                 file_exists = FILE_EXISTS_TEMPLATE.copy()
@@ -505,36 +509,30 @@ if __name__ == '__main__':
                     file_exists_digests.append(file_exists_digest)
                     base.update({file_exists_digest: file_exists})
 
-                masks = []
-                mask_digests = []
-                for symbol in symbols:
-                    addr = int(symbol['st_value']) - offset
-                    if addr % 4 != 0: addr -= 1
-                    addr = hex(addr)
-                    length = hex(int(symbol['st_size']))
-                    mask = make_mask(target, addr, length)
-                    if mask in mask_values: continue
-                    mask_values.append(mask)
-                    mask_feature = {
-                        'filename': target[str(target).index('/system'):],
-                        'signature': mask,
-                        'symbol': symbol.name,
-                        'testType': "MASK_SIGNATURE_SYMBOL"
-                    }
-                    if mask_feature in masks: continue
-                    masks.append(mask_feature)
-                    print('MASK_SIGNATURE_SYMBOL: {}'.format(mask))
-                    print('SYMBOL: {}'.format(symbol.name))
+                # for symbol in symbols:
+                symbol = symbols[0]
+                addr = int(symbol['st_value']) - offset
+                if addr % 4 != 0: addr -= 1
+                addr = hex(addr)
+                length = hex(int(symbol['st_size']))
+                mask = make_mask(target, addr, length)
+                if mask in mask_values: continue
+                mask_values.append(mask)
+                mask_feature = {
+                    'filename': target[str(target).index('/system'):],
+                    'signature': mask,
+                    'symbol': symbol.name,
+                    'testType': "MASK_SIGNATURE_SYMBOL"
+                }
+                print('MASK_SIGNATURE_SYMBOL: {}'.format(mask))
+                print('SYMBOL: {}'.format(symbol.name))
 
-                    for mask_feature in masks:
-                        d = gen_digest(mask_feature)
-                        if d not in mask_digests:
-                            mask_digests.append(d)
-                        base.update({d: mask_feature})
+                d = gen_digest(mask_feature)
+                base.update({d: mask_feature})
                 if file_exists_digest in mask_digests_list:
-                    mask_digests_list[file_exists_digest] += mask_digests
+                    mask_digests_list[file_exists_digest].append(d)
                 else:
-                    mask_digests_list[file_exists_digest] = mask_digests
+                    mask_digests_list[file_exists_digest] = [d]
 
         base_path = "D:/work_2021/CVE/automask"
         basic_file_path = '{}/{}/{}-BASIC.json'.format(base_path, cve, cve)

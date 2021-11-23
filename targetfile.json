@@ -1344,5 +1344,15 @@
       "camera"
     ],
     "commonfunc": "allocate_copy_camera_metadata_checked"
+  },
+  "106": {
+    "target": [
+      "/system/lib/libaudiopolicymanagerdefault.so",
+      "/system/lib64/libaudiopolicymanagerdefault.so"
+    ],
+    "codepath": [
+      "services/audiopolicy/managerdefault"
+    ],
+    "commonfunc": "toAudioPortConfig"
   }
 }

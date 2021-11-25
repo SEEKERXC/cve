@@ -115,7 +115,7 @@ def process_cve(cveid):
             ths = tr.xpath('.//th')
             for thid in range(len(ths)):
                 if ths[thid].text == "Severity": serveid = thid
-                if "versions" in ths[thid].text:
+                if ths[thid].text and "versions" in ths[thid].text:
                     upverid = thid
             tds = tr.xpath('.//td')
             for tdid in range(len(tds)):
@@ -494,8 +494,6 @@ if __name__ == '__main__':
             symbols = get_symbol_of_target(target, affected_funcs)  # 受影响的函数符号
             if not symbols or len(symbols) == 0:
                 print('==============找不到对应的函数符号=============='.format(target))
-            else:
-                print('Affected symbols: {}'.format(symbols))
             offset = get_offset(target)  # 基础偏移
             if symbols and len(symbols) > 0:
 
@@ -560,6 +558,7 @@ if __name__ == '__main__':
             cvefeature['testVulnerable']['testType'] = 'OR'
             for i in range(len(file_exists_digests)):
                 file_exists_digest = file_exists_digests[i]
+                if file_exists_digest not in mask_digests_list: continue
                 masks = mask_digests_list[file_exists_digest]
                 feature_of_one_file = {
                     'subtests': [],

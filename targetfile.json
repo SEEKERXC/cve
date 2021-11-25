@@ -1,12 +1,7 @@
 {
   "1": {
     "target": [
-      "/system/lib/hw/bluetooth.default.so",
-      "/system/vendor/lib/hw/bluetooth.default.so",
-      "/system/vendor/lib64/hw/bluetooth.default.so",
-      "/system/lib64/hw/bluetooth.default.so",
-      "/system/lib/libbluetooth.so",
-      "/system/lib64/libbluetooth.so"
+      "/system/lib/hw/bluetooth.default.so"
     ],
     "codepath": [
       "/platform/system/bt/"
@@ -279,10 +274,6 @@
     "target": [
       "/system/lib/libnfc-nxp-nci.so",
       "/system/lib64/libnfc-nci.so",
-      "/system/lib/libnfc-nci-45-548.so",
-      "/system/lib/libnfc-nci-45-551.so",
-      "/system/lib64/libnfc-nci-45-66t.so",
-      "/system/lib64/libnfc-nci-45-553.so",
       "/system/lib64/libnfc-nxp-nci.so",
       "/system/lib/libnfc-nci.so"
     ],
@@ -587,7 +578,8 @@
       "/libs/binder/PermissionCache.cpp",
       "/libs/binder/ProcessState.cpp",
       "/libs/binder/Static.cpp",
-      "/libs/binder/TextOutput.cpp"
+      "/libs/binder/TextOutput.cpp",
+      "system/libhwbinder"
     ],
     "commonfunc": "_ZNK7android8BpMemory9getMemoryEPiPj"
   },
@@ -802,7 +794,8 @@
       "/system/lib64/libstagefright.so"
     ],
     "codepath": [
-      "/libwebm/mkvparser/mkvparser.cc"
+      "/libwebm/mkvparser/mkvparser.cc",
+      "media/extractors/mp4"
     ],
     "commonfunc": "ParseElementHeader"
   },
@@ -871,9 +864,10 @@
       "/system/lib64/libandroid_runtime.so"
     ],
     "codepath": [
-      "frameworks/base/core/jni"
+      "frameworks/base/core/jni",
+      "core/jni"
     ],
-    "commonfunc": ""
+    "commonfunc": "register_android_os_Debug"
   },
   "66": {
     "target": [
@@ -931,7 +925,7 @@
       "/system/lib64/libcutils.so"
     ],
     "codepath": [
-      "system/core/libcutils"
+      "libcutils"
     ],
     "commonfunc": ""
   },
@@ -1249,7 +1243,8 @@
       "/system/lib64/libmedia2_jni.so"
     ],
     "codepath": [
-      "media/libstagefright"
+      "media/libstagefright",
+      "libmediaplayer2"
     ],
     "commonfunc": "canOffloadStream"
   },
@@ -1354,5 +1349,35 @@
       "services/audiopolicy/managerdefault"
     ],
     "commonfunc": "toAudioPortConfig"
+  },
+  "107": {
+    "target": [
+      "/system/lib/libFFTEm.so",
+      "/system/lib64/libFFTEm.so"
+    ],
+    "codepath": [
+      "external/neven"
+    ],
+    "commonfunc": "bbf_Scanner_addOutPos"
+  },
+  "108": {
+    "target": [
+      "/system/lib/libaaudio.so",
+      "/system/lib64/libaaudio.so"
+    ],
+    "codepath": [
+      "libaaudio"
+    ],
+    "commonfunc": "getFullFramesAvailable"
+  },
+  "109": {
+    "target": [
+      "/system/lib/libsensor.so",
+      "/system/lib64/libsensor.so"
+    ],
+    "codepath": [
+      "libs/sensor"
+    ],
+    "commonfunc": "flattenString8"
   }
 }
